@@ -98,8 +98,8 @@ export function HomePage() {
           <span className="text-secondary font-bold uppercase tracking-[0.4em] text-xs mb-8 animate-reveal stagger-1">
             Melbourne's Premier Property Value Specialists
           </span>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-8 max-w-6xl leading-[1.05] animate-reveal stagger-2">
-            Renovate Before Selling. <br /><span className="text-gold italic">Maximise Your Property Value.</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-8 max-w-6xl leading-[1.05] animate-reveal stagger-2 px-2 sm:px-0">
+            Renovate Before Selling. <br className="hidden sm:block" /><span className="text-gold italic">Maximise Your Property Value.</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-white/70 max-w-2xl mb-12 font-medium leading-relaxed animate-reveal stagger-3">
@@ -119,15 +119,15 @@ export function HomePage() {
 
           {/* Trust Bar */}
           <div className="w-full max-w-5xl border-t border-white/10 pt-12 animate-reveal stagger-5">
-            <div className="flex flex-wrap justify-center gap-8 md:gap-16 text-white/40 font-bold uppercase tracking-[0.3em] text-[10px]">
-              <div className="flex items-center gap-3">
-                <span className="text-secondary">30+</span> Years Construction Experience
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-8 md:gap-16 text-white/40 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[9px] sm:text-[10px]">
+              <div className="flex items-center justify-center gap-2 sm:gap-3">
+                <span className="text-secondary">30+</span> Years Construction
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-secondary">13+</span> Years Property Development Experience
+              <div className="flex items-center justify-center gap-2 sm:gap-3">
+                <span className="text-secondary">13+</span> Years Development
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-secondary">$110M+</span> Property Transactions
+              <div className="flex items-center justify-center gap-2 sm:gap-3">
+                <span className="text-secondary">$110M+</span> Transactions
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@ export function HomePage() {
             <div className="relative group">
               <BeforeAfterSlider 
                 beforeImage="/projects/home/before.webp"
-                afterImage="/projects/home/main.webp"
+                afterImage="/projects/home/kitchen-after.webp"
                 beforeLabel="Original Presentation"
                 afterLabel="PDCON Transformation"
                 className="h-[500px] md:h-[700px] shadow-2xl border border-muted"
@@ -191,7 +191,7 @@ export function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="relative order-2 lg:order-1">
               <img 
-                src="/projects/home2/main.webp" 
+                src="/projects/home2/main2.webp" 
                 alt="Strategic Planning" 
                 className={cn(
                   "w-full aspect-square object-cover shadow-2xl transition-opacity duration-700",
@@ -287,7 +287,7 @@ export function HomePage() {
                 suburb: 'Berwick',
                 summary: 'Strategic pre-sale renovation focusing on high-impact zones.',
                 metric: '$355,000 Value Increase',
-                image: '/projects/home/main.webp'
+                image: '/projects/home/pool.webp'
               },
               {
                 id: 'berwick-refresh',
@@ -295,7 +295,7 @@ export function HomePage() {
                 suburb: 'Berwick',
                 summary: 'Swifter, targeted cosmetic refresh to solve market stalling.',
                 metric: '$83,000+ Additional Value',
-                image: '/projects/home2/main.webp'
+                image: '/projects/home2/after-bath.webp'
               },
               {
                 id: 'beaconsfield-transformation',

@@ -133,13 +133,9 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-white/30 text-[9px] uppercase tracking-[0.2em] font-bold">
           <p>© {new Date().getFullYear()} PDCON PROPERTY VALUE IMPROVEMENT SPECIALISTS. ALL RIGHTS RESERVED.</p>
-          <div className="flex gap-8">
-            <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <a href="https://ghanprojects.com.au" className="hover:opacity-80 transition-opacity">
-              <img src="/ghan-projects-logo-white.webp" alt="Ghan Projects Group" className="h-6 w-auto" />
-            </a>
-          </div>
+          <a href="https://ghanprojects.com.au" className="hover:opacity-80 transition-opacity">
+            <img src="/ghan-projects-logo-white.webp" alt="Ghan Projects Group" className="h-6 w-auto" />
+          </a>
         </div>
       </div>
     </footer>

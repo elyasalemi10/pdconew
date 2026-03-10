@@ -10,7 +10,6 @@ import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { AgentsPage } from './pages/AgentsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ConsultationPage } from './pages/ConsultationPage';
-import { LegalPage } from './pages/LegalPage';
 import { ShowroomPage } from './pages/ShowroomPage';
 
 // Root Route
@@ -88,18 +87,6 @@ const consultationRoute = createRoute({
   component: ConsultationPage,
 });
 
-const privacyRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/privacy',
-  component: () => <LegalPage title="Privacy Policy" />,
-});
-
-const termsRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/terms',
-  component: () => <LegalPage title="Terms of Service" />,
-});
-
 // Create Route Tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -113,8 +100,6 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   showroomRoute,
   consultationRoute,
-  privacyRoute,
-  termsRoute,
 ]);
 
 // Create Router

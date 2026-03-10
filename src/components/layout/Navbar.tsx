@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +24,7 @@ const navItems = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -34,6 +35,17 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const isDarkHeroPage = location.pathname === '/' || 
                          location.pathname.startsWith('/services/') || 
                          location.pathname === '/about' ||
@@ -42,21 +54,21 @@ export function Navbar() {
                          location.pathname === '/past-projects' ||
                          location.pathname === '/consultation';
 
-  const useWhiteText = !isScrolled && isDarkHeroPage;
+  const useWhiteText = !isScrolled && isDarkHeroPage && !isOpen;
 
   return (
     <nav 
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-white/95 backdrop-blur-md shadow-elegant py-3" : "bg-transparent py-6"
+        isScrolled || isOpen ? "bg-white shadow-elegant py-3" : "bg-transparent py-4 md:py-6"
       )}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-4 group">
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-4 group" onClick={() => setIsOpen(false)}>
           <img 
             src={useWhiteText ? "/pdcon-logo-white.webp" : "/pdcon-logo-dark.webp"} 
             alt="PDCON Logo" 
-            className="h-12 w-auto transition-all duration-300"
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
         </Link>
 
@@ -105,55 +117,86 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* Mobile Toggle */}
-        <button 
-          className={cn(
-            "lg:hidden p-2 transition-colors",
-            useWhiteText ? "text-white" : "text-primary"
-          )}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile: Book + Toggle */}
+        <div className="flex lg:hidden items-center gap-3">
+          <Button asChild size="sm" className="bg-secondary text-primary hover:bg-secondary/90 rounded-none px-4 h-9 text-xs font-bold">
+            <Link to="/consultation">Book Now</Link>
+          </Button>
+          <button 
+            className={cn(
+              "p-2 transition-colors rounded-sm",
+              useWhiteText ? "text-white" : "text-primary"
+            )}
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
       <div className={cn(
-        "lg:hidden fixed inset-0 top-[72px] bg-white z-40 transition-transform duration-500 ease-in-out",
-        isOpen ? "translate-x-0" : "translate-x-full"
+        "lg:hidden fixed inset-0 top-[60px] bg-white z-40 transition-all duration-300",
+        isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
       )}>
-        <div className="flex flex-col p-8 gap-6 h-full overflow-y-auto">
-          {navItems.map((item) => (
-            <div key={item.label} className="flex flex-col gap-4">
-              {item.children ? (
-                <>
-                  <span className="text-xl font-bold font-heading text-primary/40 uppercase text-xs tracking-widest">{item.label}</span>
-                  {item.children.map((child) => (
-                    <Link 
-                      key={child.label}
-                      to={child.href}
-                      className="text-2xl font-bold font-heading hover:text-secondary"
-                      onClick={() => setIsOpen(false)}
+        <div className="flex flex-col h-full overflow-y-auto">
+          <div className="flex flex-col p-6 gap-2">
+            {navItems.map((item) => (
+              <div key={item.label} className="border-b border-muted last:border-0">
+                {item.children ? (
+                  <div>
+                    <button 
+                      className="w-full flex items-center justify-between py-4 text-lg font-bold text-primary"
+                      onClick={() => setExpandedMenu(expandedMenu === item.label ? null : item.label)}
                     >
-                      {child.label}
-                    </Link>
-                  ))}
-                </>
-              ) : (
-                <Link 
-                  to={item.href}
-                  className="text-4xl font-bold font-heading hover:text-secondary"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              )}
-            </div>
-          ))}
-          <div className="mt-auto pt-8">
-            <Button asChild className="w-full bg-primary py-8 text-xl rounded-none font-bold">
+                      {item.label}
+                      <ChevronDown className={cn(
+                        "w-5 h-5 transition-transform",
+                        expandedMenu === item.label && "rotate-180"
+                      )} />
+                    </button>
+                    <div className={cn(
+                      "overflow-hidden transition-all duration-300",
+                      expandedMenu === item.label ? "max-h-48 pb-4" : "max-h-0"
+                    )}>
+                      {item.children.map((child) => (
+                        <Link 
+                          key={child.label}
+                          to={child.href}
+                          className="flex items-center gap-3 py-3 pl-4 text-muted-foreground hover:text-secondary"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <ChevronRight className="w-4 h-4 text-secondary" />
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <Link 
+                    to={item.href}
+                    className={cn(
+                      "block py-4 text-lg font-bold transition-colors",
+                      location.pathname === item.href ? "text-secondary" : "text-primary hover:text-secondary"
+                    )}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-auto p-6 bg-muted border-t border-border">
+            <Button asChild className="w-full bg-primary text-white py-6 text-base rounded-none font-bold mb-4">
               <Link to="/consultation" onClick={() => setIsOpen(false)}>Book Property Consultation</Link>
             </Button>
+            <a href="tel:0408255259" className="flex items-center justify-center gap-3 py-3 text-primary font-medium">
+              <Phone className="w-5 h-5 text-secondary" />
+              0408 255 259
+            </a>
           </div>
         </div>
       </div>

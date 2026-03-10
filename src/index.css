@@ -167,3 +167,64 @@
 *::-webkit-scrollbar {
   display: none;
 }
+
+/* Mobile text overflow fix */
+@media (max-width: 768px) {
+  h1, h2, h3 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+/* Mobile animation optimizations - reduce motion and show hover states */
+@media (max-width: 1024px) {
+  /* Show hover states by default on touch devices */
+  .group:hover .group-hover\:opacity-100,
+  .group .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+  
+  .group:hover .group-hover\:translate-y-0,
+  .group .group-hover\:translate-y-0 {
+    transform: translateY(0);
+  }
+  
+  .group:hover .group-hover\:scale-110,
+  .group .group-hover\:scale-110 {
+    transform: scale(1);
+  }
+  
+  /* Reduce animation durations on mobile */
+  .transition-all,
+  .transition-transform,
+  .transition-opacity,
+  .transition-colors {
+    transition-duration: 200ms !important;
+  }
+  
+  /* Disable complex animations on mobile for performance */
+  .animate-pulse-slow {
+    animation: none;
+  }
+}
+
+/* Touch device specific - show interactive elements immediately */
+@media (hover: none) and (pointer: coarse) {
+  .group .group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+  
+  .group .group-hover\:translate-y-0 {
+    transform: translateY(0) !important;
+  }
+  
+  [class*="hover:scale"] {
+    transform: scale(1) !important;
+  }
+}
