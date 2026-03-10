@@ -25,7 +25,10 @@ export async function sendContactEmail(data: EmailData): Promise<{ success: bool
 
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
-      return { success: false, error: result.error || 'Failed to send email' };
+      const errorMsg = result.details 
+        ? `${result.error}: ${result.details}` 
+        : (result.error || 'Failed to send email');
+      return { success: false, error: errorMsg };
     }
 
     return { success: true };

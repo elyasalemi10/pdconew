@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { Outlet, useLocation } from '@tanstack/react-router';
-import { Toaster } from 'react-hot-toast';
 
 export function PageLayout() {
   const { pathname } = useLocation();
@@ -18,14 +17,6 @@ export function PageLayout() {
         <Outlet />
       </main>
       <Footer />
-      <Toaster 
-        position="bottom-right"
-        toastOptions={{
-          className: 'rounded-none border-primary font-heading font-medium text-sm px-6 py-4 shadow-elegant',
-          success: { icon: '✓', style: { background: 'white', color: '#1B2A41' } },
-          error: { icon: '✕', style: { background: 'white', color: '#B91C1C' } },
-        }}
-      />
     </div>
   );
 }
