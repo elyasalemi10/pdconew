@@ -4,10 +4,184 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle2, Clock, ShieldCheck, ArrowRight, Calendar } from 'lucide-react';
+import { CheckCircle2, Clock, ShieldCheck, ArrowRight, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { SEO } from '@/components/ui/SEO';
 import { sendContactEmail } from '@/lib/email';
+import { cn } from '@/lib/utils';
+
+function ShowroomBookingForm({ isSubmitting, onSubmit }: { isSubmitting: boolean; onSubmit: (e: React.FormEvent<HTMLFormElement>) => void }) {
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const [currentMonth, setCurrentMonth] = React.useState(new Date());
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    return { daysInMonth, startingDay };
+  };
+  
+  const { daysInMonth, startingDay } = getDaysInMonth(currentMonth);
+  
+  const isDateDisabled = (day: number) => {
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    const dayOfWeek = date.getDay();
+    return date < today || dayOfWeek === 0 || dayOfWeek === 6;
+  };
+  
+  const formatSelectedDate = () => {
+    if (!selectedDate) return '';
+    return selectedDate.toISOString().split('T')[0];
+  };
+  
+  const formatDisplayDate = () => {
+    if (!selectedDate) return 'Select a date';
+    return selectedDate.toLocaleDateString('en-AU', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+  
+  const monthYear = currentMonth.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+  
+  const prevMonth = () => {
+    const prev = new Date(currentMonth);
+    prev.setMonth(prev.getMonth() - 1);
+    if (prev >= new Date(today.getFullYear(), today.getMonth(), 1)) {
+      setCurrentMonth(prev);
+    }
+  };
+  
+  const nextMonth = () => {
+    const next = new Date(currentMonth);
+    next.setMonth(next.getMonth() + 1);
+    setCurrentMonth(next);
+  };
+  
+  const canGoPrev = () => {
+    const prev = new Date(currentMonth);
+    prev.setMonth(prev.getMonth() - 1);
+    return prev >= new Date(today.getFullYear(), today.getMonth(), 1);
+  };
+
+  return (
+    <form onSubmit={onSubmit} className="flex flex-col gap-6 relative z-10">
+      <input type="hidden" name="preferred_date" value={formatSelectedDate()} />
+      
+      <div className="text-center mb-2">
+        <Calendar className="w-10 h-10 text-secondary mx-auto mb-3" />
+        <h3 className="text-2xl font-display font-bold text-primary">Schedule Your Visit</h3>
+        <p className="text-muted-foreground mt-1 text-sm">214 High St, Cranbourne VIC 3977</p>
+      </div>
+      
+      <div className="flex flex-col gap-2">
+        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Your Name</label>
+        <Input name="name" placeholder="John Doe" required className="bg-white border-muted h-12 rounded-none focus:ring-secondary focus:border-secondary text-base" />
+      </div>
+      
+      <div className="flex flex-col gap-2">
+        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Phone or Email</label>
+        <Input name="phone" placeholder="0400 000 000 or email@example.com" required className="bg-white border-muted h-12 rounded-none focus:ring-secondary focus:border-secondary text-base" />
+      </div>
+      
+      <div className="flex flex-col gap-3">
+        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Preferred Visit Date</label>
+        
+        <div className="bg-white border border-muted p-4">
+          <div className="flex items-center justify-between mb-4">
+            <button 
+              type="button"
+              onClick={prevMonth}
+              disabled={!canGoPrev()}
+              className={cn(
+                "p-2 hover:bg-muted rounded transition-colors",
+                !canGoPrev() && "opacity-30 cursor-not-allowed"
+              )}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <span className="font-bold text-primary">{monthYear}</span>
+            <button 
+              type="button"
+              onClick={nextMonth}
+              className="p-2 hover:bg-muted rounded transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+              <div key={i} className="text-center text-[10px] font-bold text-muted-foreground py-1">
+                {day}
+              </div>
+            ))}
+          </div>
+          
+          <div className="grid grid-cols-7 gap-1">
+            {Array.from({ length: startingDay }).map((_, i) => (
+              <div key={`empty-${i}`} />
+            ))}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const day = i + 1;
+              const isDisabled = isDateDisabled(day);
+              const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+              const isSelected = selectedDate?.toDateString() === date.toDateString();
+              const isToday = date.toDateString() === today.toDateString();
+              
+              return (
+                <button
+                  key={day}
+                  type="button"
+                  disabled={isDisabled}
+                  onClick={() => setSelectedDate(date)}
+                  className={cn(
+                    "aspect-square flex items-center justify-center text-sm font-medium rounded transition-all",
+                    isDisabled && "text-muted-foreground/30 cursor-not-allowed",
+                    !isDisabled && !isSelected && "hover:bg-secondary/20 text-primary",
+                    isSelected && "bg-secondary text-primary font-bold",
+                    isToday && !isSelected && "ring-1 ring-secondary"
+                  )}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        
+        {selectedDate && (
+          <div className="flex items-center gap-2 text-sm text-primary font-medium bg-secondary/10 px-4 py-3 border border-secondary/20">
+            <CheckCircle2 className="w-4 h-4 text-secondary" />
+            {formatDisplayDate()}
+          </div>
+        )}
+      </div>
+
+      <div className="pt-2">
+        <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-5 text-base rounded-none shadow-elegant group transition-all">
+          {isSubmitting ? 'Sending...' : (
+            <span className="flex items-center justify-center gap-3">
+              Confirm Showroom Visit <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            </span>
+          )}
+        </Button>
+      </div>
+
+      <p className="text-center text-xs text-muted-foreground">
+        We'll confirm your appointment within 24 hours. Weekdays only.
+      </p>
+    </form>
+  );
+}
 
 export function ConsultationPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -161,42 +335,7 @@ export function ConsultationPage() {
               
               {isShowroomBooking ? (
                 /* Showroom Booking Form - Simplified */
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6 relative z-10">
-                  <div className="text-center mb-4">
-                    <Calendar className="w-12 h-12 text-secondary mx-auto mb-4" />
-                    <h3 className="text-2xl font-display font-bold text-primary">Schedule Your Visit</h3>
-                    <p className="text-muted-foreground mt-2">214 High St, Cranbourne VIC 3977</p>
-                  </div>
-                  
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Your Name</label>
-                    <Input name="name" placeholder="John Doe" required className="bg-white border-muted h-14 rounded-none focus:ring-secondary focus:border-secondary text-base" />
-                  </div>
-                  
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Phone or Email</label>
-                    <Input name="phone" placeholder="0400 000 000 or email@example.com" required className="bg-white border-muted h-14 rounded-none focus:ring-secondary focus:border-secondary text-base" />
-                  </div>
-                  
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Preferred Date</label>
-                    <Input name="preferred_date" type="date" className="bg-white border-muted h-14 rounded-none focus:ring-secondary focus:border-secondary text-base" />
-                  </div>
-
-                  <div className="pt-4">
-                    <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-6 text-lg rounded-none shadow-elegant group transition-all">
-                      {isSubmitting ? 'Sending...' : (
-                        <span className="flex items-center justify-center gap-3">
-                          Confirm Showroom Visit <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                        </span>
-                      )}
-                    </Button>
-                  </div>
-
-                  <p className="text-center text-sm text-muted-foreground">
-                    We'll confirm your appointment within 24 hours.
-                  </p>
-                </form>
+                <ShowroomBookingForm isSubmitting={isSubmitting} onSubmit={handleSubmit} />
               ) : (
                 /* Regular Consultation Form */
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5 sm:gap-6 relative z-10">

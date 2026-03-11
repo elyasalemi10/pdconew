@@ -140,6 +140,23 @@ export function Footer() {
             <img src="/ghan-projects-logo-white.webp" alt="Ghan Projects Group" className="h-6 w-auto" />
           </a>
         </div>
+
+        {/* Powered by Scale Up with AI */}
+        <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-center">
+          <a 
+            href="https://scaleupwithai.ai/intelligent-websites" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 text-white/40 hover:text-white/60 transition-colors group"
+          >
+            <span className="text-[10px] uppercase tracking-[0.2em] font-medium">Powered by</span>
+            <img 
+              src="/scaleup.webp" 
+              alt="Scale Up with AI" 
+              className="h-5 w-auto opacity-60 group-hover:opacity-100 transition-opacity" 
+            />
+          </a>
+        </div>
       </div>
     </footer>
   );
