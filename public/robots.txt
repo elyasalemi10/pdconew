@@ -1,0 +1,11 @@
+# PDCON Property Value Improvement Specialists
+# https://pdcon.com.au
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://pdcon.com.au/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1

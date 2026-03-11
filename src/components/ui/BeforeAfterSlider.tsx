@@ -49,7 +49,10 @@ export function BeforeAfterSlider({
       setIsDragging(false);
     };
     const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging) handleMove(e.touches[0].clientX);
+      if (isDragging) {
+        e.preventDefault();
+        handleMove(e.touches[0].clientX);
+      }
     };
     const handleTouchEnd = () => {
       setIsDragging(false);
@@ -58,8 +61,10 @@ export function BeforeAfterSlider({
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', handleTouchEnd);
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
     }
 
     return () => {
@@ -67,13 +72,15 @@ export function BeforeAfterSlider({
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
     };
   }, [isDragging, handleMove]);
 
   return (
     <div 
       ref={containerRef}
-      className={cn("relative overflow-hidden cursor-ew-resize select-none h-[400px] lg:h-[600px] group bg-primary", className)}
+      className={cn("relative overflow-hidden cursor-ew-resize select-none h-[400px] lg:h-[600px] group bg-primary touch-none", className)}
       onMouseDown={(e) => { setIsDragging(true); handleMove(e.clientX); }}
       onTouchStart={(e) => { setIsDragging(true); handleMove(e.touches[0].clientX); }}
     >

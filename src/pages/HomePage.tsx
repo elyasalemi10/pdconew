@@ -15,7 +15,7 @@ const PRELOAD_IMAGES = [
   '/projects/home/main.webp',
   '/projects/home/pool.webp',
   '/projects/home/bedroom.webp',
-  '/projects/home2/main.webp',
+  '/projects/home2/main2.webp',
 ];
 
 export function HomePage() {
@@ -76,12 +76,14 @@ export function HomePage() {
   return (
     <div className="flex flex-col w-full">
       <SEO 
-        title="Renovate Before Selling | PDCON Melbourne Property Value Specialists" 
-        description="Melbourne's premier property value specialists. Strategic renovations designed to improve buyer appeal and achieve stronger property outcomes."
+        title="Pre-Sale Renovation & Property Value Improvement Specialists" 
+        description="Melbourne's premier property value specialists. Strategic pre-sale renovations designed to increase buyer appeal and maximise property sale price. Serving Berwick, Narre Warren, Beaconsfield and South East Melbourne."
+        canonical="/"
+        image="/landing.webp"
       />
       
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-primary">
+      <section className="relative min-h-[100svh] lg:min-h-screen flex items-center justify-center py-32 md:py-40 overflow-hidden bg-primary">
         <div className="absolute inset-0 z-0">
           <img 
             src="/landing.webp" 
@@ -95,30 +97,30 @@ export function HomePage() {
         </div>
 
         <Container className="relative z-10 text-center flex flex-col items-center">
-          <span className="text-secondary font-bold uppercase tracking-[0.4em] text-xs mb-8 animate-reveal stagger-1">
+          <span className="text-secondary font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[10px] sm:text-xs mb-6 md:mb-10 animate-reveal stagger-1">
             Melbourne's Premier Property Value Specialists
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-8 max-w-6xl leading-[1.05] animate-reveal stagger-2 px-2 sm:px-0">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-6 md:mb-10 max-w-6xl leading-[1.1] animate-reveal stagger-2 px-2 sm:px-0">
             Renovate Before Selling. <br className="hidden sm:block" /><span className="text-gold italic">Maximise Your Property Value.</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-white/70 max-w-2xl mb-12 font-medium leading-relaxed animate-reveal stagger-3">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/70 max-w-2xl mb-10 md:mb-16 font-medium leading-relaxed animate-reveal stagger-3 px-4 sm:px-0">
             Strategic renovations designed to improve buyer appeal and achieve stronger property outcomes.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 animate-reveal stagger-4 mb-20">
-            <Button asChild size="lg" className="bg-secondary hover:bg-secondary/90 text-primary px-12 py-8 text-lg font-bold rounded-none shadow-gold transition-all duration-300 group">
-              <Link to="/consultation" className="flex items-center gap-3">
-                Book Property Consultation <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 animate-reveal stagger-4 mb-16 md:mb-24 w-full sm:w-auto px-4 sm:px-0">
+            <Button asChild size="lg" className="bg-secondary hover:bg-secondary/90 text-primary px-8 sm:px-12 py-5 sm:py-8 text-sm sm:text-lg font-bold rounded-none shadow-gold transition-all duration-300 group">
+              <Link to="/consultation" className="flex items-center justify-center gap-2 sm:gap-3">
+                Book Consultation <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 transition-transform" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/5 hover:border-white/50 px-12 py-8 text-lg font-bold rounded-none backdrop-blur-sm transition-colors duration-200">
+            <Button asChild variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/5 hover:border-white/50 px-8 sm:px-12 py-5 sm:py-8 text-sm sm:text-lg font-bold rounded-none backdrop-blur-sm transition-colors duration-200">
               <Link to="/past-projects">View Case Study</Link>
             </Button>
           </div>
 
           {/* Trust Bar */}
-          <div className="w-full max-w-5xl border-t border-white/10 pt-12 animate-reveal stagger-5">
+          <div className="w-full max-w-5xl border-t border-white/10 pt-8 md:pt-12 animate-reveal stagger-5">
             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-8 md:gap-16 text-white/40 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[9px] sm:text-[10px]">
               <div className="flex items-center justify-center gap-2 sm:gap-3">
                 <span className="text-secondary">30+</span> Years Construction
@@ -333,17 +335,17 @@ export function HomePage() {
       </section>
 
       {/* 6. CONSULTATION SECTION */}
-      <section className="bg-primary py-12">
-        <Container clean>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="flex flex-col gap-12">
-              <div className="flex flex-col gap-6">
-                <span className="text-xs font-bold uppercase tracking-[0.4em] text-secondary">Expert Consultation</span>
-                <h2 className="text-5xl md:text-6xl font-display font-bold text-white leading-tight italic">
+      <section className="bg-primary py-8 sm:py-12">
+        <Container clean className="px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <div className="flex flex-col gap-6 lg:gap-12">
+              <div className="flex flex-col gap-4 sm:gap-6">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-secondary">Expert Consultation</span>
+                <h2 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-white leading-tight italic">
                   Property Improvement <span className="text-gold">Consultation</span>
                 </h2>
               </div>
-              <p className="text-xl text-white/60 leading-relaxed font-light">
+              <p className="text-base sm:text-xl text-white/60 leading-relaxed font-light">
                 Our specialists provide expert analysis on buyer appeal and market positioning to identify the strategic improvements required to maximise your property's value.
               </p>
               
@@ -362,61 +364,61 @@ export function HomePage() {
                 ))}
               </div>
 
-              <div className="flex flex-col gap-8 pt-8">
-                <a href="tel:0408255259" className="flex items-center gap-6 group">
-                  <div className="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center group-hover:bg-secondary transition-all duration-300">
-                    <Phone className="w-6 h-6 text-secondary group-hover:text-primary" />
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-4 sm:gap-8 pt-4 sm:pt-8">
+                <a href="tel:0408255259" className="flex items-center gap-4 sm:gap-6 group">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-secondary/10 rounded-full flex items-center justify-center group-hover:bg-secondary transition-all duration-300 shrink-0">
+                    <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-secondary group-hover:text-primary" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-white/40 uppercase tracking-widest font-bold">Phone</span>
-                    <span className="text-xl font-semibold text-white">0408 255 259</span>
+                    <span className="text-[9px] sm:text-xs text-white/40 uppercase tracking-widest font-bold">Phone</span>
+                    <span className="text-lg sm:text-xl font-semibold text-white">0408 255 259</span>
                   </div>
                 </a>
-                <a href="mailto:info@pdcon.com.au" className="flex items-center gap-6 group">
-                  <div className="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center group-hover:bg-secondary transition-all duration-300">
-                    <Mail className="w-6 h-6 text-secondary group-hover:text-primary" />
+                <a href="mailto:info@pdcon.com.au" className="flex items-center gap-4 sm:gap-6 group">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-secondary/10 rounded-full flex items-center justify-center group-hover:bg-secondary transition-all duration-300 shrink-0">
+                    <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-secondary group-hover:text-primary" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-white/40 uppercase tracking-widest font-bold">Email</span>
-                    <span className="text-xl font-semibold text-white">info@pdcon.com.au</span>
+                    <span className="text-[9px] sm:text-xs text-white/40 uppercase tracking-widest font-bold">Email</span>
+                    <span className="text-lg sm:text-xl font-semibold text-white break-all">info@pdcon.com.au</span>
                   </div>
                 </a>
               </div>
             </div>
 
-            <div className="bg-white p-10 md:p-14 shadow-2xl">
-              <form onSubmit={handleContactSubmit} className="flex flex-col gap-6">
+            <div className="bg-white p-6 sm:p-10 md:p-14 shadow-2xl">
+              <form onSubmit={handleContactSubmit} className="flex flex-col gap-4 sm:gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Full Name *</label>
-                  <Input name="name" required placeholder="Your name" className="rounded-none border-muted h-14 focus:border-secondary" />
+                  <Input name="name" required placeholder="Your name" className="rounded-none border-muted h-12 sm:h-14 focus:border-secondary text-base" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Email Address *</label>
-                    <Input name="email" type="email" required placeholder="email@address.com" className="rounded-none border-muted h-14 focus:border-secondary" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Email *</label>
+                    <Input name="email" type="email" required placeholder="email@address.com" className="rounded-none border-muted h-12 sm:h-14 focus:border-secondary text-base" />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Phone Number *</label>
-                    <Input name="phone" type="tel" required placeholder="0400 000 000" className="rounded-none border-muted h-14 focus:border-secondary" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Phone *</label>
+                    <Input name="phone" type="tel" required placeholder="0400 000 000" className="rounded-none border-muted h-12 sm:h-14 focus:border-secondary text-base" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Property Suburb</label>
-                  <Input name="suburb" placeholder="e.g. Berwick, Narre Warren" className="rounded-none border-muted h-14 focus:border-secondary" />
+                  <Input name="suburb" placeholder="e.g. Berwick, Narre Warren" className="rounded-none border-muted h-12 sm:h-14 focus:border-secondary text-base" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Message</label>
                   <textarea 
                     name="message" 
-                    rows={4} 
+                    rows={3} 
                     placeholder="Tell us about your property..."
-                    className="w-full rounded-none border border-muted px-4 py-3 text-sm focus:outline-none focus:border-secondary resize-none"
+                    className="w-full rounded-none border border-muted px-4 py-3 text-base focus:outline-none focus:border-secondary resize-none"
                   />
                 </div>
                 <Button 
                   type="submit" 
                   disabled={isSubmitting} 
-                  className="bg-primary text-white hover:bg-secondary hover:text-primary h-16 text-sm font-bold uppercase tracking-widest transition-all duration-500 rounded-none mt-4"
+                  className="w-full bg-primary text-white hover:bg-secondary hover:text-primary h-12 sm:h-14 text-sm font-bold uppercase tracking-wider transition-all duration-500 rounded-none mt-2"
                 >
                   {isSubmitting ? 'Sending...' : 'Request Consultation'}
                 </Button>

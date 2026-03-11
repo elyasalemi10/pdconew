@@ -51,7 +51,7 @@ export const projects = [
     suburb: 'Berwick',
     type: 'Cosmetic Upgrade',
     roi: '218%',
-    image: '/projects/home2/main.webp',
+    image: '/projects/home2/main2.webp',
     description: 'A targeted cosmetic upgrade strategy delivered with a renovation budget of $38,000 to resolve unfinished presentation items.',
     overview: 'This Berwick property had been renovated approximately three years earlier, however several presentation items remained unfinished. Because of these incomplete improvements the owner struggled to achieve the desired sale result.',
     strategy: 'A targeted cosmetic upgrade strategy was delivered with a renovation budget of $38,000. These relatively small but strategic upgrades significantly improved the property\'s presentation and buyer appeal.',
@@ -71,7 +71,7 @@ export const projects = [
     gallery: [
       {
         before: '/projects/home2/after.webp',
-        after: '/projects/home2/main.webp',
+        after: '/projects/home2/main2.webp',
         label: 'Property Refresh'
       }
     ]
@@ -179,34 +179,36 @@ export function ProjectsPage() {
   return (
     <div className="flex flex-col w-full">
       <SEO 
-        title="Past Projects | PDCON Melbourne" 
-        description="Explore our portfolio of high-end property value improvements and strategic pre-sale renovations across Melbourne."
+        title="Renovation Case Studies | Property Transformation Portfolio" 
+        description="Explore our portfolio of successful pre-sale renovations and property transformations across Melbourne. Real results including ROI, value increases, and before/after comparisons."
+        canonical="/past-projects"
+        image="/projects/home/main.webp"
       />
       {/* Page Header */}
-      <section className="bg-primary pt-32 pb-12 relative overflow-hidden">
+      <section className="bg-primary pt-24 sm:pt-32 pb-8 sm:pb-12 relative overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-10">
           <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-secondary rounded-full -translate-y-1/2 translate-x-1/2 blur-[120px]" />
         </div>
-        <Container className="relative z-10 flex flex-col gap-10 text-center items-center">
-          <span className="text-xs font-bold uppercase tracking-[0.5em] text-secondary">Strategic Portfolio</span>
-          <h1 className="text-5xl md:text-8xl font-display font-bold text-white max-w-5xl leading-[1.1] italic">
-            Past <span className="text-gold underline decoration-secondary/20 underline-offset-[16px]">Projects</span>
+        <Container className="relative z-10 flex flex-col gap-6 sm:gap-10 text-center items-center px-4 sm:px-6">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] sm:tracking-[0.5em] text-secondary">Strategic Portfolio</span>
+          <h1 className="text-3xl sm:text-5xl md:text-8xl font-display font-bold text-white max-w-5xl leading-[1.1] italic">
+            Past <span className="text-gold underline decoration-secondary/20 underline-offset-8 sm:underline-offset-[16px]">Projects</span>
           </h1>
-          <p className="text-2xl text-white/50 max-w-3xl leading-relaxed font-light">
+          <p className="text-base sm:text-2xl text-white/50 max-w-3xl leading-relaxed font-light px-2">
             A selection of strategic property value improvement projects delivered across Melbourne's premium residential markets.
           </p>
         </Container>
       </section>
 
       {/* Grid */}
-      <section className="py-12 bg-white">
-        <Container clean className="flex flex-col gap-16">
-          <div className="grid grid-cols-1 gap-16">
+      <section className="py-8 sm:py-12 bg-white">
+        <Container clean className="flex flex-col gap-10 sm:gap-16 px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-10 sm:gap-16">
             {projects.map((project, i) => (
               <div 
                 key={project.id} 
                 className={cn(
-                  "flex flex-col lg:grid lg:grid-cols-12 gap-16 items-center group",
+                  "flex flex-col lg:grid lg:grid-cols-12 gap-6 sm:gap-16 items-center group",
                   i % 2 === 1 ? "lg:flex-row-reverse" : ""
                 )}
               >
@@ -223,40 +225,40 @@ export function ProjectsPage() {
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   </Link>
                   {/* Case study indicator */}
-                  <div className="absolute top-8 left-8 bg-white/90 backdrop-blur-md px-6 py-3 text-[10px] font-bold uppercase tracking-[0.4em] text-primary shadow-xl">
+                  <div className="absolute top-4 left-4 sm:top-8 sm:left-8 bg-white/90 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-primary shadow-xl">
                     Transformation {String(i + 1).padStart(2, '0')}
                   </div>
                 </div>
 
                 <div className={cn(
-                  "lg:col-span-5 flex flex-col gap-8",
+                  "lg:col-span-5 flex flex-col gap-4 sm:gap-8",
                   i % 2 === 1 ? "lg:order-1 lg:text-right lg:items-end" : ""
                 )}>
-                  <div className="flex flex-col gap-4">
-                    <div className={cn("flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary", i % 2 === 1 ? "justify-end" : "")}>
+                  <div className="flex flex-col gap-2 sm:gap-4">
+                    <div className={cn("flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-secondary", i % 2 === 1 ? "justify-end" : "")}>
                       <span>{project.type}</span>
-                      <span className="w-8 h-px bg-secondary/30" />
+                      <span className="w-4 sm:w-8 h-px bg-secondary/30" />
                       <span>{project.suburb}, VIC</span>
                     </div>
-                    <h3 className="text-4xl md:text-5xl font-display font-bold text-primary leading-tight italic">
+                    <h3 className="text-2xl sm:text-4xl md:text-5xl font-display font-bold text-primary leading-tight italic">
                       {project.title}
                     </h3>
                   </div>
                   
-                  <p className="text-xl text-muted-foreground leading-relaxed font-light italic">
+                  <p className="text-sm sm:text-xl text-muted-foreground leading-relaxed font-light italic">
                     {project.description}
                   </p>
 
-                  <div className={cn("flex flex-wrap gap-12 py-8 border-y border-muted", i % 2 === 1 ? "justify-end" : "")}>
+                  <div className={cn("flex flex-wrap gap-6 sm:gap-12 py-4 sm:py-8 border-y border-muted", i % 2 === 1 ? "justify-end" : "")}>
                     {project.metrics.slice(0, 2).map((metric, idx) => (
-                      <div key={idx} className="flex flex-col gap-2">
-                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">{metric.label}</span>
-                        <span className="text-2xl font-display font-bold text-primary">{metric.value}</span>
+                      <div key={idx} className="flex flex-col gap-1 sm:gap-2">
+                        <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground font-bold">{metric.label}</span>
+                        <span className="text-lg sm:text-2xl font-display font-bold text-primary">{metric.value}</span>
                       </div>
                     ))}
                   </div>
 
-                  <Button asChild className="bg-primary text-white hover:bg-secondary hover:text-primary rounded-none h-16 px-12 text-sm font-bold tracking-widest uppercase transition-all duration-500 w-fit">
+                  <Button asChild className="bg-primary text-white hover:bg-secondary hover:text-primary rounded-none h-12 sm:h-16 px-6 sm:px-12 text-xs sm:text-sm font-bold tracking-widest uppercase transition-all duration-500 w-full sm:w-fit">
                     <Link to={`/past-projects/${project.id}`}>View Full Case Study</Link>
                   </Button>
                 </div>
@@ -267,20 +269,20 @@ export function ProjectsPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-white py-12 relative overflow-hidden">
+      <section className="bg-white py-8 sm:py-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--secondary)/0.05)_0%,transparent_70%)]" />
-        <Container clean>
-          <div className="flex flex-col items-center text-center gap-8 relative z-10 py-12 border-y border-muted">
-            <span className="text-xs font-bold uppercase tracking-[0.5em] text-secondary">Strategic Transformation</span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-primary max-w-4xl leading-tight italic">
-              Thinking of Selling Your <span className="text-gold underline decoration-secondary/20 underline-offset-[12px]">Property?</span>
+        <Container clean className="px-4 sm:px-6 lg:px-12">
+          <div className="flex flex-col items-center text-center gap-6 sm:gap-8 relative z-10 py-8 sm:py-12 border-y border-muted">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] sm:tracking-[0.5em] text-secondary">Strategic Transformation</span>
+            <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold text-primary max-w-4xl leading-tight italic">
+              Thinking of Selling Your <span className="text-gold underline decoration-secondary/20 underline-offset-4 sm:underline-offset-[12px]">Property?</span>
             </h2>
-            <p className="text-2xl text-muted-foreground font-medium max-w-2xl leading-relaxed italic">
+            <p className="text-base sm:text-2xl text-muted-foreground font-medium max-w-2xl leading-relaxed italic px-2">
               A strategic renovation may significantly increase your property's market value and buyer appeal.
             </p>
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-16 py-10 text-2xl font-bold rounded-none shadow-elegant group transition-all duration-500 hover:scale-105 active:scale-95">
-              <Link to="/consultation" className="flex items-center gap-4">
-                Book Property Improvement Consultation <ArrowRight className="w-8 h-8 group-hover:translate-x-3 transition-transform duration-500" />
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 sm:px-16 py-6 sm:py-10 text-base sm:text-2xl font-bold rounded-none shadow-elegant group transition-all duration-500 hover:scale-105 active:scale-95">
+              <Link to="/consultation" className="flex items-center gap-2 sm:gap-4">
+                Book Consultation <ArrowRight className="w-5 h-5 sm:w-8 sm:h-8 group-hover:translate-x-3 transition-transform duration-500" />
               </Link>
             </Button>
           </div>

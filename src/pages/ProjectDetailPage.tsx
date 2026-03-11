@@ -17,8 +17,10 @@ export function ProjectDetailPage() {
   return (
     <div className="flex flex-col w-full">
       <SEO
-        title={`${project.title} | Case Study`}
-        description={`Detailed case study of this strategic ${project.type} project in ${project.suburb}, Victoria.`}
+        title={`${project.title} | ${project.type} Case Study ${project.suburb}`}
+        description={`${project.description} Strategic ${project.type.toLowerCase()} achieving ${project.roi} ROI in ${project.suburb}, Victoria.`}
+        canonical={`/past-projects/${project.id}`}
+        image={project.image}
       />
       {/* Back Button */}
       <div className="bg-white pt-32 pb-8 border-b border-muted">

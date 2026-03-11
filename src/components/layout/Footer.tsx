@@ -20,7 +20,10 @@ const footerLinks = {
     { label: 'Consultation Booking', href: '/consultation' },
   ],
   locations: [
-    'Berwick', 'Narre Warren', 'Clyde', 'Officer', 'Beaconsfield', 'Cranbourne', 'South East Melbourne'
+    'Berwick', 'Narre Warren', 'Clyde', 'Officer', 'Beaconsfield', 'Cranbourne', 
+    'Beaumaris', 'South Yarra', 'Armadale', 'Malvern', 'Hawthorn', 'Canterbury',
+    'Middle Park', 'Albert Park', 'East Melbourne', 'South Melbourne', 'Camberwell',
+    'Brighton', 'Prahran', 'Deepdene', 'South East Melbourne'
   ]
 };
 
