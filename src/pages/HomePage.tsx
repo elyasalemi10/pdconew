@@ -300,11 +300,11 @@ export function HomePage() {
                 image: '/projects/home2/after-bath.webp'
               },
               {
-                id: 'beaconsfield-transformation',
-                title: 'Beaconsfield Property Transformation',
-                suburb: 'Beaconsfield',
-                summary: 'Auction purchase renovation designed for market repositioning.',
-                metric: '$800,000 Sale Result',
+                id: 'devon-meadows-transformation',
+                title: 'Devon Meadows Property Transformation',
+                suburb: 'Devon Meadows',
+                summary: 'Risk recovery renovation of an unfinished property. Sold $1,455,000.',
+                metric: '$1,455,000 Sale Result',
                 image: '/projects/home3/kitchen.webp'
               }
             ].map((project) => (
