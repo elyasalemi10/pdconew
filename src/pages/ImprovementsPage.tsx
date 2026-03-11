@@ -35,7 +35,7 @@ export function ImprovementsPage() {
         <Container className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center px-4 sm:px-6 lg:px-12">
           <div className="relative group order-2 lg:order-1">
             <img 
-              src="/projects/home2/main2.webp" 
+              src="/projects/home/bedroom.webp"
               alt="Modern Living" 
               className="w-full aspect-[4/5] object-cover shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-transform duration-1000 group-hover:scale-105"
             />
@@ -125,7 +125,7 @@ export function ImprovementsPage() {
           <div className="relative">
             <div className="aspect-[4/3] overflow-hidden rounded-sm shadow-2xl">
               <img 
-                src="/projects/home/main.webp" 
+                src="/projects/home2/main2.webp"
                 alt="Berwick Property Refresh" 
                 className="w-full h-full object-cover"
               />
