@@ -20,15 +20,20 @@ import {
 import { BLOG_CATEGORIES, slugify, calculateReadingTime, generateExcerpt } from '@/lib/supabase';
 import type { BlogPost, BlogCategory } from '@/lib/supabase';
 
-const ADMIN_SECRET = (import.meta as any).env.VITE_ADMIN_SECRET as string || '';
 const API_BASE = '/api/blog';
+
+let adminToken = '';
+
+function setAdminToken(token: string) {
+  adminToken = token;
+}
 
 async function apiFetch(path: string, options: RequestInit = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${ADMIN_SECRET}`,
+      Authorization: `Bearer ${adminToken}`,
       ...options.headers,
     },
   });
@@ -547,9 +552,11 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
 
 // --- Main Admin Page ---
 export function AdminPage() {
-  const [authenticated, setAuthenticated] = useState(!!ADMIN_SECRET);
-  const [secretInput, setSecretInput] = useState('');
-  const [adminToken, setAdminToken] = useState(ADMIN_SECRET);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'list' | 'edit'>('list');
@@ -576,11 +583,27 @@ export function AdminPage() {
     if (authenticated) fetchPosts();
   }, [authenticated, fetchPosts]);
 
-  const handleLogin = () => {
-    if (secretInput) {
-      setAdminToken(secretInput);
-      setAuthenticated(true);
+  const handleLogin = async () => {
+    if (!username || !password) return;
+    setLoggingIn(true);
+    setLoginError('');
+    try {
+      const res = await fetch('/api/blog/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setLoginError(data.error || 'Invalid credentials');
+      } else {
+        setAdminToken(data.token);
+        setAuthenticated(true);
+      }
+    } catch {
+      setLoginError('Login failed. Try again.');
     }
+    setLoggingIn(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -599,15 +622,29 @@ export function AdminPage() {
         <SEO title="Admin" noindex />
         <div className="bg-white border border-border rounded-sm p-8 w-full max-w-sm">
           <h1 className="text-xl font-heading font-bold text-primary mb-4">Admin Access</h1>
+          {loginError && (
+            <p className="text-sm text-red-500 mb-3">{loginError}</p>
+          )}
+          <input
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            className="w-full text-sm border border-border rounded px-3 py-2 mb-3 focus:border-secondary outline-none"
+            placeholder="Username"
+            autoComplete="username"
+          />
           <input
             type="password"
-            value={secretInput}
-            onChange={e => setSecretInput(e.target.value)}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleLogin()}
             className="w-full text-sm border border-border rounded px-3 py-2 mb-4 focus:border-secondary outline-none"
-            placeholder="Enter admin secret"
+            placeholder="Password"
+            autoComplete="current-password"
           />
-          <Button onClick={handleLogin} className="w-full bg-primary text-white rounded-none">Login</Button>
+          <Button onClick={handleLogin} disabled={loggingIn} className="w-full bg-primary text-white rounded-none">
+            {loggingIn ? 'Logging in...' : 'Login'}
+          </Button>
         </div>
       </div>
     );
