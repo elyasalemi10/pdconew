@@ -11,6 +11,9 @@ import { AgentsPage } from './pages/AgentsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ConsultationPage } from './pages/ConsultationPage';
 import { ShowroomPage } from './pages/ShowroomPage';
+const BlogListPage = React.lazy(() => import('./pages/BlogListPage').then(m => ({ default: m.BlogListPage })));
+const BlogPostPage = React.lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })));
+const AdminPage = React.lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
 
 // Root Route
 const rootRoute = createRootRoute({
@@ -87,6 +90,30 @@ const consultationRoute = createRoute({
   component: ConsultationPage,
 });
 
+// Blog Routes
+const blogRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blog',
+  component: BlogListPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    page: (search.page as string) || undefined,
+    category: (search.category as string) || undefined,
+  }),
+});
+
+const blogPostRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blog/$slug',
+  component: BlogPostPage,
+});
+
+// Admin Route
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: AdminPage,
+});
+
 // Create Route Tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -96,6 +123,9 @@ const routeTree = rootRoute.addChildren([
   cosmeticRoute,
   projectsRoute,
   projectDetailRoute,
+  blogRoute,
+  blogPostRoute,
+  adminRoute,
   agentsRoute,
   aboutRoute,
   showroomRoute,

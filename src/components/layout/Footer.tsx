@@ -15,6 +15,7 @@ const footerLinks = {
   company: [
     { label: 'About PDCON', href: '/about' },
     { label: 'Past Projects', href: '/past-projects' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Showroom', href: '/showroom' },
     { label: 'For Real Estate Agents', href: '/agents' },
     { label: 'Consultation Booking', href: '/consultation' },

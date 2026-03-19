@@ -16,6 +16,7 @@ const navItems = [
     ]
   },
   { label: 'Past Projects', href: '/past-projects' },
+  { label: 'Blog', href: '/blog' },
   { label: 'Showroom', href: '/showroom' },
   { label: 'Agents', href: '/agents' },
   { label: 'About', href: '/about' },
@@ -46,13 +47,14 @@ export function Navbar() {
     };
   }, [isOpen]);
 
-  const isDarkHeroPage = location.pathname === '/' || 
-                         location.pathname.startsWith('/services/') || 
+  const isDarkHeroPage = location.pathname === '/' ||
+                         location.pathname.startsWith('/services/') ||
                          location.pathname === '/about' ||
                          location.pathname === '/showroom' ||
                          location.pathname === '/agents' ||
                          location.pathname === '/past-projects' ||
-                         location.pathname === '/consultation';
+                         location.pathname === '/consultation' ||
+                         location.pathname === '/blog';
 
   const useWhiteText = !isScrolled && isDarkHeroPage && !isOpen;
 
