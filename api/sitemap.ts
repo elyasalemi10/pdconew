@@ -24,7 +24,7 @@ const staticPages = [
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { data: posts } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('slug, updated_at, published_at')
       .eq('status', 'published')
       .order('published_at', { ascending: false });

@@ -1,5 +1,8 @@
--- Blog Posts table
-CREATE TABLE IF NOT EXISTS blog_posts (
+-- PDCON Blog Migration
+-- Safe to run on a database with existing email_signups and blog_posts tables
+
+-- PDCON Blog Posts table (prefixed to avoid collision with existing blog_posts)
+CREATE TABLE IF NOT EXISTS pdcon_blog_posts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
@@ -29,8 +32,8 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   old_slugs TEXT[] DEFAULT '{}'
 );
 
--- Images table
-CREATE TABLE IF NOT EXISTS images (
+-- PDCON Images table
+CREATE TABLE IF NOT EXISTS pdcon_images (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   url TEXT NOT NULL,
   alt_text TEXT,
@@ -39,19 +42,19 @@ CREATE TABLE IF NOT EXISTS images (
   width INTEGER,
   height INTEGER,
   uploaded_at TIMESTAMPTZ DEFAULT NOW(),
-  post_id UUID REFERENCES blog_posts(id) ON DELETE SET NULL
+  post_id UUID REFERENCES pdcon_blog_posts(id) ON DELETE SET NULL
 );
 
--- Indexes for performance
-CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_published_at ON blog_posts(published_at DESC);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_old_slugs ON blog_posts USING GIN(old_slugs);
-CREATE INDEX IF NOT EXISTS idx_images_post_id ON images(post_id);
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_pdcon_blog_posts_slug ON pdcon_blog_posts(slug);
+CREATE INDEX IF NOT EXISTS idx_pdcon_blog_posts_status ON pdcon_blog_posts(status);
+CREATE INDEX IF NOT EXISTS idx_pdcon_blog_posts_category ON pdcon_blog_posts(category);
+CREATE INDEX IF NOT EXISTS idx_pdcon_blog_posts_published_at ON pdcon_blog_posts(published_at DESC);
+CREATE INDEX IF NOT EXISTS idx_pdcon_blog_posts_old_slugs ON pdcon_blog_posts USING GIN(old_slugs);
+CREATE INDEX IF NOT EXISTS idx_pdcon_images_post_id ON pdcon_images(post_id);
 
 -- Auto-update updated_at trigger
-CREATE OR REPLACE FUNCTION update_updated_at_column()
+CREATE OR REPLACE FUNCTION pdcon_update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
   NEW.updated_at = NOW();
@@ -59,25 +62,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_blog_posts_updated_at
-  BEFORE UPDATE ON blog_posts
+CREATE TRIGGER update_pdcon_blog_posts_updated_at
+  BEFORE UPDATE ON pdcon_blog_posts
   FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+  EXECUTE FUNCTION pdcon_update_updated_at_column();
 
 -- Enable Row Level Security
-ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE images ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pdcon_blog_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pdcon_images ENABLE ROW LEVEL SECURITY;
 
 -- Public read access for published posts
-CREATE POLICY "Public can read published posts" ON blog_posts
+CREATE POLICY "Public can read published pdcon posts" ON pdcon_blog_posts
   FOR SELECT USING (status = 'published');
 
 -- Service role has full access (used by API)
-CREATE POLICY "Service role full access posts" ON blog_posts
+CREATE POLICY "Service role full access pdcon posts" ON pdcon_blog_posts
   FOR ALL USING (true) WITH CHECK (true);
 
-CREATE POLICY "Service role full access images" ON images
+CREATE POLICY "Service role full access pdcon images" ON pdcon_images
   FOR ALL USING (true) WITH CHECK (true);
 
-CREATE POLICY "Public can read images" ON images
+CREATE POLICY "Public can read pdcon images" ON pdcon_images
   FOR SELECT USING (true);

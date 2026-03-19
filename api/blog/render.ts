@@ -30,7 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // Check for old slug redirect
     const { data: redirectPost } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('slug')
       .contains('old_slugs', [slug])
       .eq('status', 'published')
@@ -42,7 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const { data: post } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('*')
       .eq('slug', slug)
       .eq('status', 'published')

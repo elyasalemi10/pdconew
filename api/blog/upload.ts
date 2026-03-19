@@ -55,49 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Decode base64 file data
     const buffer = Buffer.from(file, 'base64');
 
-    // Process image with sharp (convert to WebP, resize)
-    let sharp;
-    try {
-      sharp = (await import('sharp')).default;
-    } catch {
-      // sharp not available, upload as-is
-      const timestamp = Date.now();
-      const sluggedName = slugifyFilename(filename);
-      const key = `blog/${timestamp}-${sluggedName}.webp`;
-
-      await s3.send(new PutObjectCommand({
-        Bucket: process.env.R2_BUCKET_NAME!,
-        Key: key,
-        Body: buffer,
-        ContentType: 'image/webp',
-        CacheControl: 'public, max-age=31536000, immutable',
-      }));
-
-      const url = `${process.env.R2_PUBLIC_URL}/${key}`;
-
-      const { data: imageRecord } = await supabase
-        .from('images')
-        .insert({
-          url,
-          alt_text: alt_text || null,
-          original_filename: filename,
-          size_bytes: buffer.length,
-          post_id: post_id || null,
-        })
-        .select()
-        .single();
-
-      return res.status(200).json({ url, image: imageRecord });
-    }
-
-    // Process with sharp: convert to WebP, resize to max 1200px wide
-    const processed = await sharp(buffer)
-      .resize({ width: 1200, withoutEnlargement: true })
-      .webp({ quality: 82 })
-      .toBuffer();
-
-    const metadata = await sharp(processed).metadata();
-
+    // Upload image as-is (sharp processing can be added via a separate worker if needed)
     const timestamp = Date.now();
     const sluggedName = slugifyFilename(filename);
     const key = `blog/${timestamp}-${sluggedName}.webp`;
@@ -105,7 +63,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await s3.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME!,
       Key: key,
-      Body: processed,
+      Body: buffer,
       ContentType: 'image/webp',
       CacheControl: 'public, max-age=31536000, immutable',
     }));
@@ -113,14 +71,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const url = `${process.env.R2_PUBLIC_URL}/${key}`;
 
     const { data: imageRecord } = await supabase
-      .from('images')
+      .from('pdcon_images')
       .insert({
         url,
         alt_text: alt_text || null,
         original_filename: filename,
-        size_bytes: processed.length,
-        width: metadata.width || null,
-        height: metadata.height || null,
+        size_bytes: buffer.length,
         post_id: post_id || null,
       })
       .select()

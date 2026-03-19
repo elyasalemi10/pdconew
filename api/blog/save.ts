@@ -82,7 +82,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (id) {
       // Update — check if slug changed, store old slug for redirects
       const { data: existing } = await supabase
-        .from('blog_posts')
+        .from('pdcon_blog_posts')
         .select('slug, old_slugs')
         .eq('id', id)
         .single();
@@ -98,7 +98,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       const { data, error } = await supabase
-        .from('blog_posts')
+        .from('pdcon_blog_posts')
         .update(updateData)
         .eq('id', id)
         .select()
@@ -109,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } else {
       // Create
       const { data, error } = await supabase
-        .from('blog_posts')
+        .from('pdcon_blog_posts')
         .insert(postData)
         .select()
         .single();

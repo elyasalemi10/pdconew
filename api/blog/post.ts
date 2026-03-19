@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // First try to find by current slug
     let { data, error } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('*')
       .eq('slug', slug)
       .eq('status', 'published')
@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!data) {
       // Check if it's an old slug (redirect)
       const { data: redirectPost } = await supabase
-        .from('blog_posts')
+        .from('pdcon_blog_posts')
         .select('slug')
         .contains('old_slugs', [slug])
         .eq('status', 'published')
@@ -45,7 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Get related posts from same category
     const { data: related } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('id, title, slug, excerpt, featured_image_url, featured_image_alt, category, published_at, reading_time')
       .eq('status', 'published')
       .eq('category', data.category)

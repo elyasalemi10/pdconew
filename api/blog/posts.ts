@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const offset = (pageNum - 1) * limitNum;
 
     let query = supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('*', { count: 'exact' });
 
     // Public requests only see published posts unless admin token is provided

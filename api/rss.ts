@@ -20,7 +20,7 @@ function escapeXml(str: string): string {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { data: posts } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .select('*')
       .eq('status', 'published')
       .order('published_at', { ascending: false })

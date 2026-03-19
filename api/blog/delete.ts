@@ -23,7 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const { error } = await supabase
-      .from('blog_posts')
+      .from('pdcon_blog_posts')
       .delete()
       .eq('id', id);
 
