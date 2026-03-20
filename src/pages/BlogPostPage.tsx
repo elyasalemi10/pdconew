@@ -386,7 +386,7 @@ export function BlogPostPage() {
   if (loading) {
     return (
       <div className="pt-24 pb-12 min-h-screen bg-white">
-        <Container className="max-w-3xl px-4 animate-pulse space-y-6 pt-8">
+        <Container className="max-w-4xl px-4 animate-pulse space-y-6 pt-8">
           <div className="h-4 bg-muted rounded w-64" />
           <div className="h-8 bg-muted rounded w-3/4" />
           <div className="h-4 bg-muted rounded w-48" />
@@ -437,14 +437,14 @@ export function BlogPostPage() {
       </div>
 
       {/* Article Header */}
-      <Container className="max-w-3xl px-4 sm:px-6 pt-8 sm:pt-12">
+      <Container className="max-w-4xl px-4 sm:px-6 pt-8 sm:pt-12">
         <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-secondary bg-secondary/10 px-3 py-1 rounded mb-4">
           {post.category}
         </span>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-primary leading-tight italic mb-6">
           {post.title}
         </h1>
-        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
           <span className="flex items-center gap-1.5"><User className="w-4 h-4" /> {post.author_name}</span>
           <span className="flex items-center gap-1.5">
             <CalendarDays className="w-4 h-4" /> {post.published_at ? formatDate(post.published_at) : ''}
@@ -458,8 +458,8 @@ export function BlogPostPage() {
 
       {/* Featured Image */}
       {post.featured_image_url && (
-        <div className="sm:px-0 mb-8">
-          <Container className="max-w-3xl px-0 sm:px-6">
+        <div className="sm:px-0 mb-6">
+          <Container className="max-w-4xl px-0 sm:px-6">
             <img
               src={post.featured_image_url}
               alt={post.featured_image_alt || post.title}
@@ -474,7 +474,7 @@ export function BlogPostPage() {
       )}
 
       {/* Table of Contents + Content */}
-      <Container className="max-w-3xl px-4 sm:px-6">
+      <Container className="max-w-4xl px-4 sm:px-6">
         <TableOfContents headings={headings} />
 
         {/* Post Body */}
@@ -486,7 +486,7 @@ export function BlogPostPage() {
 
       {/* CTA Section */}
       <section className="bg-muted py-12 sm:py-16 mt-12">
-        <Container className="max-w-3xl px-4 sm:px-6 text-center">
+        <Container className="max-w-4xl px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-4xl font-display font-bold text-primary mb-4 italic">
             Ready to Transform Your Property?
           </h2>
@@ -522,7 +522,7 @@ export function BlogPostPage() {
 
       {/* Author Box */}
       <section className="border-t border-border py-10">
-        <Container className="max-w-3xl px-4 sm:px-6">
+        <Container className="max-w-4xl px-4 sm:px-6">
           <div className="flex items-start gap-5">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white font-heading font-bold text-xl shrink-0">
               {post.author_name.split(' ').map(n => n[0]).join('')}
