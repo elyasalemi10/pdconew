@@ -15,10 +15,48 @@ import {
   Bold, Italic, List, ListOrdered, Quote, Minus, Undo2, Redo2,
   Image as ImageIcon, Link as LinkIcon, Table as TableIcon,
   Heading2, Heading3, Trash2, Edit3, Plus, ArrowLeft, Eye, EyeOff,
-  Check, X, Search, AlertTriangle
+  Check, X, Search, AlertTriangle, Columns2
 } from 'lucide-react';
+import { Node, mergeAttributes } from '@tiptap/core';
 import { BLOG_CATEGORIES, slugify, calculateReadingTime, generateExcerpt } from '@/lib/supabase';
 import type { BlogPost, BlogCategory } from '@/lib/supabase';
+
+// --- Before/After Slider TipTap Node ---
+const BeforeAfterNode = Node.create({
+  name: 'beforeAfterSlider',
+  group: 'block',
+  atom: true,
+
+  addAttributes() {
+    return {
+      beforeSrc: { default: '' },
+      afterSrc: { default: '' },
+      beforeAlt: { default: 'Before renovation' },
+      afterAlt: { default: 'After renovation' },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: 'div[data-before-after]' }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    const { beforeSrc, afterSrc, beforeAlt, afterAlt } = HTMLAttributes;
+    return ['div', mergeAttributes({ 'data-before-after': '', class: 'ba-slider', style: 'position:relative;overflow:hidden;aspect-ratio:16/9;cursor:ew-resize;user-select:none;' }),
+      ['img', { src: afterSrc, alt: afterAlt, loading: 'lazy', decoding: 'async', width: '1200', height: '675', style: 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' }],
+      ['div', { class: 'ba-before', style: 'position:absolute;inset:0;width:50%;overflow:hidden;border-right:3px solid #fff;z-index:2;' },
+        ['img', { src: beforeSrc, alt: beforeAlt, loading: 'lazy', decoding: 'async', width: '1200', height: '675', style: 'position:absolute;top:0;left:0;width:var(--ba-w,100cqw);height:100%;object-fit:cover;max-width:none;' }],
+      ],
+      ['div', { class: 'ba-handle', style: 'position:absolute;top:0;bottom:0;left:50%;z-index:3;width:3px;background:#fff;transform:translateX(-50%);pointer-events:none;' },
+        ['div', { style: 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;' },
+          ['span', { style: 'font-size:14px;color:#1B2A41;font-weight:bold;letter-spacing:-1px;' }, '\u25C0\u25B6'],
+        ],
+      ],
+      ['div', { style: 'position:absolute;bottom:12px;left:12px;z-index:4;padding:4px 12px;background:#1B2A41;color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;' }, 'Before'],
+      ['div', { style: 'position:absolute;bottom:12px;right:12px;z-index:4;padding:4px 12px;background:#B8A369;color:#1B2A41;font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;' }, 'After'],
+    ];
+  },
+});
 
 const API_BASE = '/api/blog';
 
@@ -96,7 +134,7 @@ function GooglePreview({ metaTitle, metaDescription, slug }: { metaTitle: string
 }
 
 // --- TipTap Toolbar ---
-function EditorToolbar({ editor, onImageUpload }: { editor: ReturnType<typeof useEditor>; onImageUpload: () => void }) {
+function EditorToolbar({ editor, onImageUpload, onBeforeAfter }: { editor: ReturnType<typeof useEditor>; onImageUpload: () => void; onBeforeAfter: () => void }) {
   if (!editor) return null;
 
   const addLink = () => {
@@ -132,6 +170,7 @@ function EditorToolbar({ editor, onImageUpload }: { editor: ReturnType<typeof us
       <div className="w-px bg-border mx-1" />
       <button type="button" onClick={addLink} className={btnClass(editor.isActive('link'))} title="Insert Link"><LinkIcon className="w-4 h-4" /></button>
       <button type="button" onClick={onImageUpload} className={btnClass(false)} title="Insert Image"><ImageIcon className="w-4 h-4" /></button>
+      <button type="button" onClick={onBeforeAfter} className={btnClass(false)} title="Before/After Slider"><Columns2 className="w-4 h-4" /></button>
       <button type="button" onClick={addTable} className={btnClass(false)} title="Insert Table"><TableIcon className="w-4 h-4" /></button>
       <button type="button" onClick={() => editor.chain().focus().setHorizontalRule().run()} className={btnClass(false)} title="Horizontal Rule"><Minus className="w-4 h-4" /></button>
       <div className="w-px bg-border mx-1" />
@@ -177,6 +216,7 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
       TableCell,
       TableHeader,
       Placeholder.configure({ placeholder: 'Start writing your blog post...' }),
+      BeforeAfterNode,
     ],
     content: initialPost?.content || '',
     onUpdate: ({ editor: ed }) => {
@@ -259,6 +299,48 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
       }
     };
     input.click();
+  };
+
+  const handleBeforeAfterUpload = () => {
+    const pickFile = (): Promise<File | null> => new Promise(resolve => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = (e) => resolve((e.target as HTMLInputElement).files?.[0] || null);
+      input.click();
+    });
+
+    (async () => {
+      alert('Select the BEFORE image first');
+      const beforeFile = await pickFile();
+      if (!beforeFile) return;
+
+      alert('Now select the AFTER image');
+      const afterFile = await pickFile();
+      if (!afterFile) return;
+
+      const beforeAlt = window.prompt('Alt text for BEFORE image:', 'Before renovation') || 'Before renovation';
+      const afterAlt = window.prompt('Alt text for AFTER image:', 'After renovation') || 'After renovation';
+
+      try {
+        const [beforeUrl, afterUrl] = await Promise.all([
+          handleImageUpload(beforeFile, 'inline'),
+          handleImageUpload(afterFile, 'inline'),
+        ]);
+
+        editor?.chain().focus().insertContent({
+          type: 'beforeAfterSlider',
+          attrs: {
+            beforeSrc: beforeUrl,
+            afterSrc: afterUrl,
+            beforeAlt,
+            afterAlt,
+          },
+        }).run();
+      } catch {
+        alert('Failed to upload images');
+      }
+    })();
   };
 
   const handleSave = async (publishStatus?: 'draft' | 'published') => {
@@ -430,7 +512,7 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
             <h3 className="text-sm font-bold uppercase tracking-widest text-secondary px-6 pt-6 pb-2 flex items-center gap-2">
               <Edit3 className="w-4 h-4" /> Content
             </h3>
-            <EditorToolbar editor={editor} onImageUpload={handleInlineImageUpload} />
+            <EditorToolbar editor={editor} onImageUpload={handleInlineImageUpload} onBeforeAfter={handleBeforeAfterUpload} />
             <div className="prose-editor">
               <EditorContent editor={editor} />
             </div>

@@ -357,6 +357,31 @@
   color: hsl(var(--primary));
 }
 
+/* Before/After Slider in blog content */
+.blog-content .ba-slider {
+  border-radius: 4px;
+  margin: 32px 0;
+  touch-action: none;
+}
+
+.blog-content .ba-slider img {
+  margin: 0;
+  border-radius: 0;
+}
+
+/* TipTap editor preview for before/after */
+.prose-editor .ba-slider {
+  border-radius: 4px;
+  margin: 16px 0;
+  touch-action: none;
+  pointer-events: none;
+}
+
+.prose-editor .ba-slider img {
+  margin: 0;
+  border-radius: 0;
+}
+
 /* Blog content mobile */
 @media (max-width: 640px) {
   .blog-content {

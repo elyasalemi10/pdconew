@@ -300,6 +300,66 @@ export function BlogPostPage() {
     };
   }, [post]);
 
+  // Hydrate before/after sliders with vanilla JS drag interaction
+  useEffect(() => {
+    if (!post) return;
+    const sliders = document.querySelectorAll<HTMLElement>('[data-before-after]');
+    const cleanups: (() => void)[] = [];
+
+    sliders.forEach(slider => {
+      const before = slider.querySelector<HTMLElement>('.ba-before');
+      const handle = slider.querySelector<HTMLElement>('.ba-handle');
+      if (!before || !handle) return;
+
+      let dragging = false;
+
+      const move = (clientX: number) => {
+        const rect = slider.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+        before.style.width = `${pct}%`;
+        handle.style.left = `${pct}%`;
+        // Set the inner image width to match the full container
+        const img = before.querySelector('img');
+        if (img) img.style.width = `${rect.width}px`;
+      };
+
+      const onDown = (e: MouseEvent | TouchEvent) => {
+        dragging = true;
+        const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        move(x);
+      };
+      const onMove = (e: MouseEvent | TouchEvent) => {
+        if (!dragging) return;
+        if ('touches' in e) e.preventDefault();
+        const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        move(x);
+      };
+      const onUp = () => { dragging = false; };
+
+      slider.addEventListener('mousedown', onDown);
+      slider.addEventListener('touchstart', onDown, { passive: true });
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('mouseup', onUp);
+      document.addEventListener('touchend', onUp);
+
+      // Set initial inner image width
+      const img = before.querySelector('img');
+      if (img) img.style.width = `${slider.offsetWidth}px`;
+
+      cleanups.push(() => {
+        slider.removeEventListener('mousedown', onDown);
+        slider.removeEventListener('touchstart', onDown);
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        document.removeEventListener('touchend', onUp);
+      });
+    });
+
+    return () => cleanups.forEach(fn => fn());
+  }, [post, processedContent]);
+
   if (loading) {
     return (
       <div className="pt-24 pb-12 min-h-screen bg-white">
