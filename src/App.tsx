@@ -11,9 +11,16 @@ import { AgentsPage } from './pages/AgentsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ConsultationPage } from './pages/ConsultationPage';
 import { ShowroomPage } from './pages/ShowroomPage';
-const BlogListPage = React.lazy(() => import('./pages/BlogListPage').then(m => ({ default: m.BlogListPage })));
-const BlogPostPage = React.lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })));
-const AdminPage = React.lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
+const LazyBlogListPage = React.lazy(() => import('./pages/BlogListPage').then(m => ({ default: m.BlogListPage })));
+const LazyBlogPostPage = React.lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })));
+const LazyAdminPage = React.lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
+
+function PageLoader() {
+  return <div className="min-h-screen" />;
+}
+function BlogListPage() { return <React.Suspense fallback={<PageLoader />}><LazyBlogListPage /></React.Suspense>; }
+function BlogPostPage() { return <React.Suspense fallback={<PageLoader />}><LazyBlogPostPage /></React.Suspense>; }
+function AdminPage() { return <React.Suspense fallback={<PageLoader />}><LazyAdminPage /></React.Suspense>; }
 
 // Root Route
 const rootRoute = createRootRoute({
