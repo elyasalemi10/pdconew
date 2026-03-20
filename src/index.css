@@ -265,14 +265,15 @@
 }
 
 .blog-content a {
-  color: hsl(var(--secondary));
-  text-decoration: none;
+  color: hsl(43 35% 55%);
+  text-decoration: underline;
+  text-underline-offset: 3px;
   font-weight: 500;
   transition: all 0.2s;
 }
 
 .blog-content a:hover {
-  text-decoration: underline;
+  color: hsl(43 35% 45%);
 }
 
 .blog-content img {
