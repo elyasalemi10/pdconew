@@ -234,17 +234,19 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
     setPost(p => ({ ...p, ...updates }));
   };
 
-  const handleImageUpload = async (file: File, purpose: 'featured' | 'inline') => {
+  const handleImageUpload = async (file: File, purpose: 'featured' | 'inline', altOverride?: string) => {
     const reader = new FileReader();
     return new Promise<string>((resolve, reject) => {
       reader.onload = async () => {
         try {
           const base64 = (reader.result as string).split(',')[1];
-          let alt = '';
-          if (purpose === 'featured') {
-            alt = post.featured_image_alt || post.title || '';
-          } else {
-            alt = window.prompt('Enter alt text for this image:', '') || '';
+          let alt = altOverride ?? '';
+          if (!altOverride) {
+            if (purpose === 'featured') {
+              alt = post.featured_image_alt || post.title || '';
+            } else {
+              alt = window.prompt('Enter alt text for this image:', '') || '';
+            }
           }
           const data = await apiFetch('/upload', {
             method: 'POST',
@@ -324,8 +326,8 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
 
       try {
         const [beforeUrl, afterUrl] = await Promise.all([
-          handleImageUpload(beforeFile, 'inline'),
-          handleImageUpload(afterFile, 'inline'),
+          handleImageUpload(beforeFile, 'inline', beforeAlt),
+          handleImageUpload(afterFile, 'inline', afterAlt),
         ]);
 
         editor?.chain().focus().insertContent({
