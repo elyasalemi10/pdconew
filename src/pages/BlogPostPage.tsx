@@ -386,7 +386,7 @@ export function BlogPostPage() {
   if (loading) {
     return (
       <div className="pt-24 pb-12 min-h-screen bg-white">
-        <Container className="max-w-4xl px-4 animate-pulse space-y-6 pt-8">
+        <Container className="max-w-6xl px-4 animate-pulse space-y-6 pt-8">
           <div className="h-4 bg-muted rounded w-64" />
           <div className="h-8 bg-muted rounded w-3/4" />
           <div className="h-4 bg-muted rounded w-48" />
@@ -437,7 +437,7 @@ export function BlogPostPage() {
       </div>
 
       {/* Article Header */}
-      <Container className="max-w-4xl px-4 sm:px-6 pt-8 sm:pt-12">
+      <Container className="max-w-6xl px-4 sm:px-6 pt-8 sm:pt-12">
         <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-secondary bg-secondary/10 px-3 py-1 rounded mb-4">
           {post.category}
         </span>
@@ -459,7 +459,7 @@ export function BlogPostPage() {
       {/* Featured Image */}
       {post.featured_image_url && (
         <div className="sm:px-0 mb-6">
-          <Container className="max-w-4xl px-0 sm:px-6">
+          <Container className="max-w-6xl px-0 sm:px-6">
             <img
               src={post.featured_image_url}
               alt={post.featured_image_alt || post.title}
@@ -474,19 +474,49 @@ export function BlogPostPage() {
       )}
 
       {/* Table of Contents + Content */}
-      <Container className="max-w-4xl px-4 sm:px-6">
-        <TableOfContents headings={headings} />
+      <Container className="max-w-6xl px-4 sm:px-6">
+        <div className="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
+          {/* Desktop: sticky sidebar TOC */}
+          {headings.length > 0 && (
+            <aside className="hidden lg:block">
+              <nav className="sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto" aria-label="Table of contents">
+                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
+                  Contents
+                </p>
+                <ul className="space-y-1 border-l border-border pl-4">
+                  {headings.map((h, i) => (
+                    <li key={i} style={{ paddingLeft: h.level === 3 ? '12px' : '0' }}>
+                      <a
+                        href={`#${h.id}`}
+                        className="text-sm text-muted-foreground hover:text-secondary transition-colors block py-1 leading-snug"
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </aside>
+          )}
 
-        {/* Post Body */}
-        <article
-          className="blog-content"
-          dangerouslySetInnerHTML={{ __html: processedContent }}
-        />
+          <div className={headings.length === 0 ? 'lg:col-span-2' : ''}>
+            {/* Mobile: collapsible TOC */}
+            <div className="lg:hidden">
+              <TableOfContents headings={headings} />
+            </div>
+
+            {/* Post Body */}
+            <article
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: processedContent }}
+            />
+          </div>
+        </div>
       </Container>
 
       {/* CTA Section */}
       <section className="bg-muted py-12 sm:py-16 mt-12">
-        <Container className="max-w-4xl px-4 sm:px-6 text-center">
+        <Container className="max-w-6xl px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-4xl font-display font-bold text-primary mb-4 italic">
             Ready to Transform Your Property?
           </h2>
@@ -522,7 +552,7 @@ export function BlogPostPage() {
 
       {/* Author Box */}
       <section className="border-t border-border py-10">
-        <Container className="max-w-4xl px-4 sm:px-6">
+        <Container className="max-w-6xl px-4 sm:px-6">
           <div className="flex items-start gap-5">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white font-heading font-bold text-xl shrink-0">
               {post.author_name.split(' ').map(n => n[0]).join('')}
