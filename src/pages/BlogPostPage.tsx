@@ -92,7 +92,8 @@ function TableOfContents({ headings }: { headings: TocItem[] }) {
 function RelatedCard({ post }: { post: Partial<BlogPost> }) {
   return (
     <Link
-      to={`/blog/${post.slug}`}
+      to="/blog/$slug"
+      params={{ slug: post.slug! }}
       className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 overflow-hidden flex flex-col"
     >
       {post.featured_image_url && (
