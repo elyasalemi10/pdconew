@@ -22,6 +22,9 @@ import { BLOG_CATEGORIES, slugify, calculateReadingTime, generateExcerpt } from 
 import type { BlogPost, BlogCategory } from '@/lib/supabase';
 
 // --- Before/After Slider TipTap Node ---
+// Renders as a simple div with data attributes + two <img> tags.
+// The data attributes survive the HTML round-trip (save → reload).
+// The blog post page hydrates these with vanilla JS for the drag interaction.
 const BeforeAfterNode = Node.create({
   name: 'beforeAfterSlider',
   group: 'block',
@@ -29,10 +32,10 @@ const BeforeAfterNode = Node.create({
 
   addAttributes() {
     return {
-      beforeSrc: { default: '' },
-      afterSrc: { default: '' },
-      beforeAlt: { default: 'Before renovation' },
-      afterAlt: { default: 'After renovation' },
+      beforeSrc: { default: '', parseHTML: el => el.getAttribute('data-before-src') },
+      afterSrc: { default: '', parseHTML: el => el.getAttribute('data-after-src') },
+      beforeAlt: { default: 'Before renovation', parseHTML: el => el.getAttribute('data-before-alt') },
+      afterAlt: { default: 'After renovation', parseHTML: el => el.getAttribute('data-after-alt') },
     };
   },
 
@@ -42,16 +45,29 @@ const BeforeAfterNode = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     const { beforeSrc, afterSrc, beforeAlt, afterAlt } = HTMLAttributes;
-    return ['div', mergeAttributes({ 'data-before-after': '', class: 'ba-slider', style: 'position:relative;overflow:hidden;aspect-ratio:16/9;cursor:ew-resize;user-select:none;' }),
+    // Store all image data as data-* attributes on the outer div so they survive getHTML() → parseHTML() round-trip
+    return ['div', mergeAttributes({
+      'data-before-after': '',
+      'data-before-src': beforeSrc,
+      'data-after-src': afterSrc,
+      'data-before-alt': beforeAlt,
+      'data-after-alt': afterAlt,
+      class: 'ba-slider',
+      style: 'position:relative;overflow:hidden;aspect-ratio:16/9;cursor:ew-resize;user-select:none;',
+    }),
+      // After image (bottom layer)
       ['img', { src: afterSrc, alt: afterAlt, loading: 'lazy', decoding: 'async', width: '1200', height: '675', style: 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' }],
+      // Before image (top layer, clipped)
       ['div', { class: 'ba-before', style: 'position:absolute;inset:0;width:50%;overflow:hidden;border-right:3px solid #fff;z-index:2;' },
-        ['img', { src: beforeSrc, alt: beforeAlt, loading: 'lazy', decoding: 'async', width: '1200', height: '675', style: 'position:absolute;top:0;left:0;width:var(--ba-w,100cqw);height:100%;object-fit:cover;max-width:none;' }],
+        ['img', { src: beforeSrc, alt: beforeAlt, loading: 'lazy', decoding: 'async', width: '1200', height: '675', style: 'position:absolute;top:0;left:0;height:100%;object-fit:cover;max-width:none;' }],
       ],
+      // Handle
       ['div', { class: 'ba-handle', style: 'position:absolute;top:0;bottom:0;left:50%;z-index:3;width:3px;background:#fff;transform:translateX(-50%);pointer-events:none;' },
         ['div', { style: 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;' },
           ['span', { style: 'font-size:14px;color:#1B2A41;font-weight:bold;letter-spacing:-1px;' }, '\u25C0\u25B6'],
         ],
       ],
+      // Labels
       ['div', { style: 'position:absolute;bottom:12px;left:12px;z-index:4;padding:4px 12px;background:#1B2A41;color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;' }, 'Before'],
       ['div', { style: 'position:absolute;bottom:12px;right:12px;z-index:4;padding:4px 12px;background:#B8A369;color:#1B2A41;font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;' }, 'After'],
     ];

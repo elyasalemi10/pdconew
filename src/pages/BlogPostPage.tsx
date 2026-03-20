@@ -304,61 +304,70 @@ export function BlogPostPage() {
   // Hydrate before/after sliders with vanilla JS drag interaction
   useEffect(() => {
     if (!post) return;
-    const sliders = document.querySelectorAll<HTMLElement>('[data-before-after]');
-    const cleanups: (() => void)[] = [];
+    // Small delay to ensure DOM is rendered from dangerouslySetInnerHTML
+    const timer = setTimeout(() => {
+      const sliders = document.querySelectorAll<HTMLElement>('[data-before-after]');
+      const cleanups: (() => void)[] = [];
 
-    sliders.forEach(slider => {
-      const before = slider.querySelector<HTMLElement>('.ba-before');
-      const handle = slider.querySelector<HTMLElement>('.ba-handle');
-      if (!before || !handle) return;
+      sliders.forEach(slider => {
+        const before = slider.querySelector<HTMLElement>('.ba-before');
+        const handle = slider.querySelector<HTMLElement>('.ba-handle');
+        if (!before || !handle) return;
 
-      let dragging = false;
+        // Ensure before image width matches container
+        const syncWidth = () => {
+          const img = before.querySelector('img');
+          if (img) img.style.width = `${slider.offsetWidth}px`;
+        };
+        syncWidth();
 
-      const move = (clientX: number) => {
-        const rect = slider.getBoundingClientRect();
-        const pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
-        before.style.width = `${pct}%`;
-        handle.style.left = `${pct}%`;
-        // Set the inner image width to match the full container
-        const img = before.querySelector('img');
-        if (img) img.style.width = `${rect.width}px`;
-      };
+        let dragging = false;
 
-      const onDown = (e: MouseEvent | TouchEvent) => {
-        dragging = true;
-        const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-        move(x);
-      };
-      const onMove = (e: MouseEvent | TouchEvent) => {
-        if (!dragging) return;
-        if ('touches' in e) e.preventDefault();
-        const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-        move(x);
-      };
-      const onUp = () => { dragging = false; };
+        const move = (clientX: number) => {
+          const rect = slider.getBoundingClientRect();
+          const pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+          before.style.width = `${pct}%`;
+          handle.style.left = `${pct}%`;
+          const img = before.querySelector('img');
+          if (img) img.style.width = `${rect.width}px`;
+        };
 
-      slider.addEventListener('mousedown', onDown);
-      slider.addEventListener('touchstart', onDown, { passive: true });
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('touchmove', onMove, { passive: false });
-      document.addEventListener('mouseup', onUp);
-      document.addEventListener('touchend', onUp);
+        const onDown = (e: MouseEvent | TouchEvent) => {
+          dragging = true;
+          const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+          move(x);
+        };
+        const onMove = (e: MouseEvent | TouchEvent) => {
+          if (!dragging) return;
+          if ('touches' in e) e.preventDefault();
+          const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+          move(x);
+        };
+        const onUp = () => { dragging = false; };
 
-      // Set initial inner image width
-      const img = before.querySelector('img');
-      if (img) img.style.width = `${slider.offsetWidth}px`;
+        slider.addEventListener('mousedown', onDown);
+        slider.addEventListener('touchstart', onDown, { passive: true });
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('mouseup', onUp);
+        document.addEventListener('touchend', onUp);
+        window.addEventListener('resize', syncWidth);
 
-      cleanups.push(() => {
-        slider.removeEventListener('mousedown', onDown);
-        slider.removeEventListener('touchstart', onDown);
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('touchmove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        document.removeEventListener('touchend', onUp);
+        cleanups.push(() => {
+          slider.removeEventListener('mousedown', onDown);
+          slider.removeEventListener('touchstart', onDown);
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('touchmove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          document.removeEventListener('touchend', onUp);
+          window.removeEventListener('resize', syncWidth);
+        });
       });
-    });
 
-    return () => cleanups.forEach(fn => fn());
+      return () => cleanups.forEach(fn => fn());
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [post, processedContent]);
 
   if (loading) {
