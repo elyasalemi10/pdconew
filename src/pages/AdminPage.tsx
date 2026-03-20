@@ -203,6 +203,9 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
   const [tagInput, setTagInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploadingFeatured, setUploadingFeatured] = useState(false);
+  const [baStep, setBaStep] = useState<null | 'before' | 'after' | 'alt' | 'uploading'>(null);
+  const [baFiles, setBaFiles] = useState<{ before: File | null; after: File | null }>({ before: null, after: null });
+  const [baAlts, setBaAlts] = useState({ before: 'Before renovation', after: 'After renovation' });
 
   const editor = useEditor({
     extensions: [
@@ -304,45 +307,39 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
   };
 
   const handleBeforeAfterUpload = () => {
-    const pickFile = (): Promise<File | null> => new Promise(resolve => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = (e) => resolve((e.target as HTMLInputElement).files?.[0] || null);
-      input.click();
-    });
+    setBaFiles({ before: null, after: null });
+    setBaAlts({ before: 'Before renovation', after: 'After renovation' });
+    setBaStep('before');
+  };
 
-    (async () => {
-      alert('Select the BEFORE image first');
-      const beforeFile = await pickFile();
-      if (!beforeFile) return;
+  const handleBaFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (baStep === 'before') {
+      setBaFiles(f => ({ ...f, before: file }));
+      setBaStep('after');
+    } else if (baStep === 'after') {
+      setBaFiles(f => ({ ...f, after: file }));
+      setBaStep('alt');
+    }
+  };
 
-      alert('Now select the AFTER image');
-      const afterFile = await pickFile();
-      if (!afterFile) return;
-
-      const beforeAlt = window.prompt('Alt text for BEFORE image:', 'Before renovation') || 'Before renovation';
-      const afterAlt = window.prompt('Alt text for AFTER image:', 'After renovation') || 'After renovation';
-
-      try {
-        const [beforeUrl, afterUrl] = await Promise.all([
-          handleImageUpload(beforeFile, 'inline', beforeAlt),
-          handleImageUpload(afterFile, 'inline', afterAlt),
-        ]);
-
-        editor?.chain().focus().insertContent({
-          type: 'beforeAfterSlider',
-          attrs: {
-            beforeSrc: beforeUrl,
-            afterSrc: afterUrl,
-            beforeAlt,
-            afterAlt,
-          },
-        }).run();
-      } catch {
-        alert('Failed to upload images');
-      }
-    })();
+  const handleBaSubmit = async () => {
+    if (!baFiles.before || !baFiles.after) return;
+    setBaStep('uploading');
+    try {
+      const [beforeUrl, afterUrl] = await Promise.all([
+        handleImageUpload(baFiles.before, 'inline', baAlts.before),
+        handleImageUpload(baFiles.after, 'inline', baAlts.after),
+      ]);
+      editor?.chain().focus().insertContent({
+        type: 'beforeAfterSlider',
+        attrs: { beforeSrc: beforeUrl, afterSrc: afterUrl, beforeAlt: baAlts.before, afterAlt: baAlts.after },
+      }).run();
+    } catch {
+      alert('Failed to upload images');
+    }
+    setBaStep(null);
   };
 
   const handleSave = async (publishStatus?: 'draft' | 'published') => {
@@ -519,6 +516,70 @@ function PostEditor({ post: initialPost, onSave, onBack }: { post?: BlogPost; on
               <EditorContent editor={editor} />
             </div>
           </div>
+
+          {/* Before/After Upload Flow */}
+          {baStep && (
+            <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => baStep !== 'uploading' && setBaStep(null)}>
+              <div className="bg-white border border-border rounded-sm p-6 w-full max-w-md space-y-4" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-secondary flex items-center gap-2">
+                    <Columns2 className="w-4 h-4" /> Before / After Slider
+                  </h3>
+                  {baStep !== 'uploading' && (
+                    <button onClick={() => setBaStep(null)} className="text-muted-foreground hover:text-primary"><X className="w-4 h-4" /></button>
+                  )}
+                </div>
+
+                {baStep === 'before' && (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">Step 1 of 3 — Select the <strong>BEFORE</strong> image</p>
+                    <input type="file" accept="image/*" onChange={handleBaFileSelected} className="w-full text-sm" />
+                  </div>
+                )}
+
+                {baStep === 'after' && (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Step 2 of 3 — Select the <strong>AFTER</strong> image</p>
+                    <p className="text-xs text-green-600 mb-3">Before image: {baFiles.before?.name}</p>
+                    <input type="file" accept="image/*" onChange={handleBaFileSelected} className="w-full text-sm" />
+                  </div>
+                )}
+
+                {baStep === 'alt' && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">Step 3 of 3 — Add alt text for SEO</p>
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Before image alt text</label>
+                      <input
+                        type="text"
+                        value={baAlts.before}
+                        onChange={e => setBaAlts(a => ({ ...a, before: e.target.value }))}
+                        className="w-full text-sm border border-border rounded px-3 py-2 focus:border-secondary outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">After image alt text</label>
+                      <input
+                        type="text"
+                        value={baAlts.after}
+                        onChange={e => setBaAlts(a => ({ ...a, after: e.target.value }))}
+                        className="w-full text-sm border border-border rounded px-3 py-2 focus:border-secondary outline-none"
+                      />
+                    </div>
+                    <Button onClick={handleBaSubmit} className="w-full bg-primary text-white rounded-none">
+                      Upload & Insert Slider
+                    </Button>
+                  </div>
+                )}
+
+                {baStep === 'uploading' && (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-muted-foreground">Uploading images...</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar - Right 1/3 */}
