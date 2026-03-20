@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useParams, useNavigate } from '@tanstack/react-router';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/button';
-import { Clock, User, CalendarDays, ArrowRight, ChevronDown, Phone } from 'lucide-react';
+import { Clock, User, CalendarDays, ArrowRight } from 'lucide-react';
 import type { BlogPost } from '@/lib/supabase';
 
 const BASE_URL = 'https://pdcon.com.au';
@@ -24,24 +24,6 @@ function headingId(text: string): string {
   return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim();
 }
 
-// Extract headings from HTML
-interface TocItem {
-  id: string;
-  text: string;
-  level: number;
-}
-
-function extractHeadings(html: string): TocItem[] {
-  const regex = /<h([23])[^>]*>(.*?)<\/h[23]>/gi;
-  const headings: TocItem[] = [];
-  let match;
-  while ((match = regex.exec(html)) !== null) {
-    const text = match[2].replace(/<[^>]*>/g, '');
-    headings.push({ id: headingId(text), text, level: parseInt(match[1], 10) });
-  }
-  return headings;
-}
-
 // Add IDs to headings in HTML content
 function addHeadingIds(html: string): string {
   return html.replace(/<h([23])([^>]*)>(.*?)<\/h[23]>/gi, (_, level, attrs, content) => {
@@ -49,43 +31,6 @@ function addHeadingIds(html: string): string {
     const id = headingId(text);
     return `<h${level}${attrs} id="${id}">${content}</h${level}>`;
   });
-}
-
-// Table of Contents component
-function TableOfContents({ headings }: { headings: TocItem[] }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  if (headings.length === 0) return null;
-
-  return (
-    <nav className="bg-muted/50 border border-border rounded-sm mb-8" aria-label="Table of contents">
-      {/* Mobile: accordion */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 sm:hidden text-left"
-      >
-        <span className="text-sm font-bold uppercase tracking-widest text-primary">Table of Contents</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      <div className={`sm:block ${isOpen ? 'block' : 'hidden'}`}>
-        <p className="text-sm font-bold uppercase tracking-widest text-primary px-5 pt-4 pb-2 hidden sm:block">
-          Table of Contents
-        </p>
-        <ul className="px-5 pb-4 space-y-1">
-          {headings.map((h, i) => (
-            <li key={i} style={{ paddingLeft: h.level === 3 ? '16px' : '0' }}>
-              <a
-                href={`#${h.id}`}
-                className="text-sm text-muted-foreground hover:text-secondary transition-colors block py-1"
-              >
-                {h.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-  );
 }
 
 // Related post card
@@ -162,7 +107,6 @@ export function BlogPostPage() {
     if (slug) fetchPost();
   }, [slug, navigate]);
 
-  const headings = useMemo(() => post ? extractHeadings(post.content) : [], [post]);
   const processedContent = useMemo(() => post ? addHeadingIds(post.content) : '', [post]);
 
   // Update document head with SEO tags
@@ -386,7 +330,7 @@ export function BlogPostPage() {
   if (loading) {
     return (
       <div className="pt-24 pb-12 min-h-screen bg-white">
-        <Container className="max-w-6xl px-4 animate-pulse space-y-6 pt-8">
+        <Container className="max-w-4xl px-4 animate-pulse space-y-6 pt-8">
           <div className="h-4 bg-muted rounded w-64" />
           <div className="h-8 bg-muted rounded w-3/4" />
           <div className="h-4 bg-muted rounded w-48" />
@@ -437,7 +381,7 @@ export function BlogPostPage() {
       </div>
 
       {/* Article Header */}
-      <Container className="max-w-6xl px-4 sm:px-6 pt-8 sm:pt-12">
+      <Container className="max-w-4xl px-4 sm:px-6 pt-8 sm:pt-12">
         <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-secondary bg-secondary/10 px-3 py-1 rounded mb-4">
           {post.category}
         </span>
@@ -459,7 +403,7 @@ export function BlogPostPage() {
       {/* Featured Image */}
       {post.featured_image_url && (
         <div className="sm:px-0 mb-6">
-          <Container className="max-w-6xl px-0 sm:px-6">
+          <Container className="max-w-4xl px-0 sm:px-6">
             <img
               src={post.featured_image_url}
               alt={post.featured_image_alt || post.title}
@@ -473,66 +417,13 @@ export function BlogPostPage() {
         </div>
       )}
 
-      {/* Table of Contents + Content */}
-      <Container className="max-w-6xl px-4 sm:px-6">
-        <div className="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
-          {/* Desktop: sticky sidebar TOC */}
-          {headings.length > 0 && (
-            <aside className="hidden lg:block">
-              <nav className="sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto" aria-label="Table of contents">
-                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
-                  Contents
-                </p>
-                <ul className="space-y-1 border-l border-border pl-4">
-                  {headings.map((h, i) => (
-                    <li key={i} style={{ paddingLeft: h.level === 3 ? '12px' : '0' }}>
-                      <a
-                        href={`#${h.id}`}
-                        className="text-sm text-muted-foreground hover:text-secondary transition-colors block py-1 leading-snug"
-                      >
-                        {h.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </aside>
-          )}
-
-          <div className={headings.length === 0 ? 'lg:col-span-2' : ''}>
-            {/* Mobile: collapsible TOC */}
-            <div className="lg:hidden">
-              <TableOfContents headings={headings} />
-            </div>
-
-            {/* Post Body */}
-            <article
-              className="blog-content"
-              dangerouslySetInnerHTML={{ __html: processedContent }}
-            />
-          </div>
-        </div>
+      {/* Content */}
+      <Container className="max-w-4xl px-4 sm:px-6 mx-auto">
+        <article
+          className="blog-content"
+          dangerouslySetInnerHTML={{ __html: processedContent }}
+        />
       </Container>
-
-      {/* CTA Section */}
-      <section className="bg-muted py-12 sm:py-16 mt-12">
-        <Container className="max-w-6xl px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-4xl font-display font-bold text-primary mb-4 italic">
-            Ready to Transform Your Property?
-          </h2>
-          <p className="text-muted-foreground text-lg mb-6 max-w-xl mx-auto">
-            Get a free renovation assessment from Melbourne's pre-sale renovation specialists.
-          </p>
-          <a href="tel:0408255259" className="text-2xl font-bold text-secondary hover:underline block mb-6">
-            0408 255 259
-          </a>
-          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-12 py-6 text-lg font-bold rounded-none shadow-elegant group">
-            <Link to="/consultation" className="flex items-center gap-3">
-              Get a Free Quote <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-            </Link>
-          </Button>
-        </Container>
-      </section>
 
       {/* Related Posts */}
       {related.length > 0 && (
@@ -550,34 +441,26 @@ export function BlogPostPage() {
         </section>
       )}
 
-      {/* Author Box */}
-      <section className="border-t border-border py-10">
-        <Container className="max-w-6xl px-4 sm:px-6">
-          <div className="flex items-start gap-5">
-            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white font-heading font-bold text-xl shrink-0">
-              {post.author_name.split(' ').map(n => n[0]).join('')}
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Written by</p>
-              <p className="text-lg font-heading font-bold text-primary">{post.author_name}</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                Director at PDCON with over a decade of experience in strategic property renovations across Melbourne. Registered builder specialising in pre-sale transformations that maximise property value.
-              </p>
-            </div>
+      {/* Final CTA */}
+      <section className="bg-white py-8 sm:py-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--secondary)/0.05)_0%,transparent_70%)]" />
+        <Container clean className="px-4 sm:px-6 lg:px-12">
+          <div className="flex flex-col items-center text-center gap-6 sm:gap-8 relative z-10 py-8 sm:py-12 border-y border-muted">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] sm:tracking-[0.5em] text-secondary">Strategic Transformation</span>
+            <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold text-primary max-w-4xl leading-tight italic">
+              Thinking of Selling Your <span className="text-gold underline decoration-secondary/20 underline-offset-4 sm:underline-offset-[12px]">Property?</span>
+            </h2>
+            <p className="text-base sm:text-2xl text-muted-foreground font-medium max-w-2xl leading-relaxed italic px-2">
+              A strategic renovation may significantly increase your property's market value and buyer appeal.
+            </p>
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 sm:px-16 py-6 sm:py-10 text-base sm:text-2xl font-bold rounded-none shadow-elegant group transition-all duration-500 hover:scale-105 active:scale-95">
+              <Link to="/consultation" className="flex items-center gap-2 sm:gap-4">
+                Book Consultation <ArrowRight className="w-5 h-5 sm:w-8 sm:h-8 group-hover:translate-x-3 transition-transform duration-500" />
+              </Link>
+            </Button>
           </div>
         </Container>
       </section>
-
-      {/* Mobile Sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-primary border-t border-white/10 p-3 flex items-center justify-between sm:hidden z-40">
-        <span className="text-white text-sm font-medium">Need renovation advice?</span>
-        <a
-          href="tel:0408255259"
-          className="bg-secondary text-primary px-4 py-2 text-sm font-bold rounded-none flex items-center gap-2"
-        >
-          <Phone className="w-4 h-4" /> Call Now
-        </a>
-      </div>
     </div>
   );
 }
