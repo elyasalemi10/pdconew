@@ -85,7 +85,7 @@ export default function About() {
             <div className="relative">
               <img
                 src={FOUNDER_IMG}
-                className="w-full aspect-[3/4] object-cover grayscale"
+                className="w-full aspect-[3/4] object-cover"
                 alt="Baqir Rezaie - Founder"
               />
               <div className="absolute -bottom-8 -left-8 w-2/3 h-2/3 bg-accent/10 -z-10" />
