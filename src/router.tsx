@@ -11,6 +11,7 @@ import InsightPost from '@/pages/InsightPost';
 import Resources from '@/pages/Resources';
 import ResourcePage from '@/pages/ResourcePage';
 import Contact from '@/pages/Contact';
+import ContactCard from '@/pages/ContactCard';
 import BookConsultation from '@/pages/BookConsultation';
 import Admin from '@/pages/Admin';
 import NotFound from '@/pages/NotFound';
@@ -109,6 +110,12 @@ const contactRoute = createRoute({
   component: Contact,
 });
 
+const contactCardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contact-2',
+  component: ContactCard,
+});
+
 const bookConsultationRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/book-consultation',
@@ -131,6 +138,7 @@ const routeTree = rootRoute.addChildren([
   resourcesRoute,
   resourcePageRoute,
   contactRoute,
+  contactCardRoute,
   bookConsultationRoute,
   adminRoute,
 ]);

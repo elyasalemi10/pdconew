@@ -24,6 +24,7 @@ const routes = [
   '/projects',
   '/insights',
   '/contact',
+  '/contact-2',
   '/resources',
   '/resources/ai-assistant',
   '/resources/rental-yield-calculator',
