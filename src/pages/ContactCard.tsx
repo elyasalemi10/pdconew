@@ -309,10 +309,10 @@ export default function ContactCard() {
                   <button
                     type="button"
                     onClick={openWechat}
-                    className="flex items-center justify-center gap-3 w-full bg-[#07C160] hover:bg-[#06AD56] text-white font-heading font-bold uppercase tracking-wider text-xs sm:text-sm py-4 transition-colors"
+                    aria-label={t.wechat}
+                    className="flex items-center justify-center w-full bg-[#07C160] hover:bg-[#06AD56] py-4 transition-colors"
                   >
-                    <img src="/wechat-icon.png" alt="" className="w-5 h-5 object-contain" />
-                    {t.wechat}
+                    <img src="/wechat-icon.png" alt={t.wechat} className="h-7 w-auto object-contain" />
                   </button>
                   <button
                     type="button"
