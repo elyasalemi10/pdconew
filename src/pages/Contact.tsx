@@ -158,7 +158,7 @@ export default function Contact() {
                       </div>
                       <div>
                         <span className="block text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-1">Office Hours</span>
-                        <span className="text-primary font-bold uppercase text-sm">Mon–Fri: 9AM–5PM</span>
+                        <span className="text-primary font-bold uppercase text-sm">Mon-Fri: 9AM-5PM</span>
                         <span className="block text-xs text-muted-foreground mt-1">Weekends: By Appointment</span>
                       </div>
                     </li>

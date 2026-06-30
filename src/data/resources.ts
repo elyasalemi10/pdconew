@@ -22,7 +22,7 @@ export const freeResources: Resource[] = [
     id: 'ai-assistant',
     title: 'AI Assistant for Property Developers',
     desc: 'We recommend this powerful AI tool for analyzing development sites, running feasibility scenarios, and getting instant answers to property development questions.',
-    fullDescription: `We highly recommend this AI Assistant for Property Developers—a cutting-edge tool designed specifically for Melbourne's property development landscape. Powered by advanced artificial intelligence, it helps you make data-driven decisions faster than ever before.
+    fullDescription: `We highly recommend this AI Assistant for Property Developers, a cutting-edge tool designed specifically for Melbourne's property development landscape. Powered by advanced artificial intelligence, it helps you make data-driven decisions faster than ever before.
 
 Whether you're evaluating a potential development site, running quick feasibility calculations, or need instant answers to complex property development questions, this AI Assistant is available 24/7 to support your investment decisions.
 
@@ -51,7 +51,7 @@ The assistant understands Melbourne's unique zoning regulations, planning overla
     desc: 'Calculate gross and net rental yields instantly. Compare investment properties and make informed decisions with accurate yield projections.',
     fullDescription: `Our Rental Yield Calculator is an essential tool for property investors looking to evaluate the income potential of investment properties in Melbourne and beyond.
 
-This calculator goes beyond simple gross yield calculations. It factors in all the costs that eat into your rental returns—property management fees, maintenance, insurance, council rates, and vacancy periods—to give you a true picture of your net rental yield.
+This calculator goes beyond simple gross yield calculations. It factors in all the costs that eat into your rental returns (property management fees, maintenance, insurance, council rates, and vacancy periods) to give you a true picture of your net rental yield.
 
 Use this tool to compare multiple properties side-by-side and identify which investments will deliver the strongest cash flow for your portfolio.`,
     cat: 'Calculator',
@@ -149,7 +149,7 @@ Each item includes guidance notes explaining why it matters and what red flags t
 
 This checklist covers legal, financial, physical, and planning aspects of property due diligence. It's suitable for both residential and commercial property purchases, with specific sections for each property type.
 
-Use this checklist to coordinate your solicitor, accountant, building inspector, and other advisors—ensuring nothing falls through the cracks before settlement.`,
+Use this checklist to coordinate your solicitor, accountant, building inspector, and other advisors, ensuring nothing falls through the cracks before settlement.`,
     cat: 'PDF Guide',
     type: 'PDF',
     isLocked: true,
@@ -203,7 +203,7 @@ We update this guide regularly to reflect current market conditions and opportun
 
 This guide covers how to build relationships with agents, identify motivated sellers, structure compelling offers, and negotiate effectively in off-market situations. It includes scripts and templates you can use in your own property search.
 
-Access to off-market opportunities can give you a significant edge in competitive markets—learn how to tap into this hidden inventory.`,
+Access to off-market opportunities can give you a significant edge in competitive markets. Learn how to tap into this hidden inventory.`,
     cat: 'PDF Guide',
     type: 'PDF',
     isLocked: true,

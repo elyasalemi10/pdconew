@@ -22,7 +22,7 @@ const API_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
 // NOTE: this should be your custom 微信号, not the internal wxid_ system ID.
 const WECHAT_ID = 'wxid_fnnejlj2t74u12';
 
-// Inline SVG lantern — no external image, so nothing loads from a blocked CDN.
+// Inline SVG lantern - no external image, so nothing loads from a blocked CDN.
 function Lantern({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 36 84" className={className} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -58,12 +58,12 @@ const LANGS: { code: Lang; label: string }[] = [
 
 const T = {
   'zh-CN': {
-    seoTitle: 'PDCON — 墨尔本房地产开发顾问',
+    seoTitle: 'PDCON | 墨尔本房地产开发顾问',
     seoDesc: '留下您的联系方式，PDCON 将主动与您联系。墨尔本专业房地产开发、投资咨询与合资合作顾问。',
     heroLead: '让我们携手',
     heroAccent: '共创未来',
     intro:
-      'PDCON 是一家位于墨尔本的房地产开发顾问公司。我们与投资者和业主携手合作，在开发、咨询及合资项目中释放资产价值——从可行性研究到项目竣工，全程为您提供专业指导。',
+      'PDCON 是一家位于墨尔本的房地产开发顾问公司。我们与投资者和业主携手合作，在开发、咨询及合资项目中释放资产价值，从可行性研究到项目竣工，全程为您提供专业指导。',
     idiom: '安居乐业',
     idiomSub: '愿您在墨尔本安居乐业，家业兴旺。',
     highlights: [
@@ -94,12 +94,12 @@ const T = {
     wechatCopied: '微信号已复制，请在微信中粘贴搜索并添加。',
   },
   'zh-TW': {
-    seoTitle: 'PDCON — 墨爾本房地產開發顧問',
+    seoTitle: 'PDCON | 墨爾本房地產開發顧問',
     seoDesc: '留下您的聯絡方式，PDCON 將主動與您聯繫。墨爾本專業房地產開發、投資諮詢與合資合作顧問。',
     heroLead: '讓我們攜手',
     heroAccent: '共創未來',
     intro:
-      'PDCON 是一家位於墨爾本的房地產開發顧問公司。我們與投資者及業主攜手合作，在開發、諮詢及合資項目中釋放資產價值——從可行性研究到項目竣工，全程為您提供專業指導。',
+      'PDCON 是一家位於墨爾本的房地產開發顧問公司。我們與投資者及業主攜手合作，在開發、諮詢及合資項目中釋放資產價值，從可行性研究到項目竣工，全程為您提供專業指導。',
     idiom: '安居樂業',
     idiomSub: '願您在墨爾本安居樂業，家業興旺。',
     highlights: [
@@ -130,15 +130,15 @@ const T = {
     wechatCopied: '微信號已複製，請在微信中貼上搜尋並加入。',
   },
   en: {
-    seoTitle: 'Connect with PDCON — Property Development Consultants Melbourne',
+    seoTitle: 'Connect with PDCON | Property Development Consultants Melbourne',
     seoDesc:
       'Leave your details and PDCON will reach out. Expert property development, investment advisory, and joint venture consulting in Melbourne.',
     heroLead: "Let's Build",
     heroAccent: 'Together',
     intro:
-      'PDCON is a Melbourne-based property development consultancy. We partner with investors and landowners to unlock value across development, advisory, and joint venture projects — guiding every step from feasibility to completion.',
+      'PDCON is a Melbourne-based property development consultancy. We partner with investors and landowners to unlock value across development, advisory, and joint venture projects, guiding every step from feasibility to completion.',
     idiom: '安居乐业',
-    idiomSub: 'Ān jū lè yè — a place to settle, a life to enjoy.',
+    idiomSub: 'Ān jū lè yè: a place to settle, a life to enjoy.',
     highlights: [
       { icon: Building2, title: 'Property Development', text: 'End-to-end project management for residential and development sites across Melbourne.' },
       { icon: TrendingUp, title: 'Investment Advisory', text: 'Strategic acquisition and feasibility guidance to maximise your returns.' },
@@ -146,7 +146,7 @@ const T = {
     ],
     addr: '7 Hammel Court, Hallam 3803, VIC',
     formTitle: 'Leave Your Details',
-    formSubtitle: "Pop in your name and the best way to reach you — we'll do the rest.",
+    formSubtitle: "Pop in your name and the best way to reach you. We'll do the rest.",
     nameLabel: 'Your Name',
     namePlaceholder: 'Jane Smith',
     phoneLabel: 'Phone',
@@ -154,17 +154,17 @@ const T = {
     emailLabel: 'Email',
     send: 'Send',
     sending: 'Sending…',
-    note: 'Provide a phone number or email — whichever suits you best. 100% confidential.',
+    note: 'Provide a phone number or email, whichever suits you best. 100% confidential.',
     successTitle: 'Thank You',
     successMsg: 'Your details are with us. A PDCON specialist will reach out shortly.',
-    toastOk: 'Thanks — we will be in touch shortly.',
+    toastOk: 'Thanks, we will be in touch shortly.',
     toastFail: 'Failed to send. Please try again.',
     validationName: 'Please enter your name.',
     validation: 'Please provide either an email address or phone number.',
     phonePlaceholder: '+86 138 0000 0000',
     wechat: 'Add us on WeChat',
     wechatIdLabel: 'WeChat ID',
-    wechatCopied: 'WeChat ID copied — paste it into WeChat search to add us.',
+    wechatCopied: 'WeChat ID copied. Paste it into WeChat search to add us.',
   },
 } as const;
 
@@ -178,7 +178,7 @@ export default function ContactCard() {
     try {
       await navigator.clipboard.writeText(WECHAT_ID);
     } catch {
-      // Clipboard API unavailable (older mobile browsers) — fall back to selection copy.
+      // Clipboard API unavailable (older mobile browsers); fall back to selection copy.
       const ta = document.createElement('textarea');
       ta.value = WECHAT_ID;
       ta.style.position = 'fixed';

@@ -8,17 +8,17 @@ import { SEO } from '@/components/shared/SEO';
 
 const opportunities = [
   {
-    title: 'Residential Home – Beaumaris',
+    title: 'Residential Home, Beaumaris',
     bullets: ['Premium Coastal Location', 'Established Neighbourhood', 'High Growth Area'],
     status: 'High Demand',
   },
   {
-    title: 'Child Care – Wood St',
+    title: 'Child Care, Wood St',
     bullets: ['Strategic Location', 'High Yield Potential', 'Long-term Investment'],
     status: 'Strategic',
   },
   {
-    title: '6 Townhouses – Narre Warren',
+    title: '6 Townhouses, Narre Warren',
     bullets: ['Development Approved', 'Multi-dwelling Site', 'Strong Rental Demand'],
     status: 'Investor Ready',
   },

@@ -82,19 +82,19 @@ const services = [
 
 const projects = [
   {
-    title: '4 Luxury Townhouses – Berwick',
+    title: '4 Luxury Townhouses, Berwick',
     tags: ['Townhouse', 'Luxury'],
     result: '4 luxury townhouses successfully delivered',
     image: '/portfolio/4-luxury-townhouses/main.webp',
   },
   {
-    title: '7 Luxury Townhouses – Mordialloc',
+    title: '7 Luxury Townhouses, Mordialloc',
     tags: ['Townhouse', 'Luxury'],
     result: '7 high-end townhouses delivered',
     image: '/portfolio/7-luxury-townhouses/main.webp',
   },
   {
-    title: 'Premium Duplex – Beaumaris',
+    title: 'Premium Duplex, Beaumaris',
     tags: ['Duplex', 'Residential'],
     result: 'Premium coastal duplex delivered',
     image: '/portfolio/duplex/main.webp',
@@ -103,17 +103,17 @@ const projects = [
 
 const opportunities = [
   {
-    title: 'Residential Home – Beaumaris',
+    title: 'Residential Home, Beaumaris',
     bullets: ['Premium Coastal Location', 'Established Neighbourhood', 'High Growth Area'],
     status: 'High Demand',
   },
   {
-    title: 'Child Care – Wood St',
+    title: 'Child Care, Wood St',
     bullets: ['Strategic Location', 'High Yield Potential', 'Long-term Investment'],
     status: 'Strategic',
   },
   {
-    title: '6 Townhouses – Narre Warren',
+    title: '6 Townhouses, Narre Warren',
     bullets: ['Development Approved', 'Multi-dwelling Site', 'Strong Rental Demand'],
     status: 'Investor Ready',
   },

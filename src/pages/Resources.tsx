@@ -167,7 +167,7 @@ export default function Resources() {
               </div>
               <h2 className="text-2xl font-heading font-bold text-primary">Free Tools</h2>
             </div>
-            <p className="text-muted-foreground">Access these powerful tools instantly—no signup required.</p>
+            <p className="text-muted-foreground">Access these powerful tools instantly, no signup required.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,4 +1,4 @@
-/* Self-hosted fonts (no external CDN — loads behind the Great Firewall) */
+/* Self-hosted fonts (no external CDN - loads behind the Great Firewall) */
 @import './fonts.css';
 
 @tailwind base;

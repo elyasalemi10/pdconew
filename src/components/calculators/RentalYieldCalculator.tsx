@@ -359,7 +359,7 @@ export function RentalYieldCalculator() {
                   <div>
                     <p className="text-white/70 text-sm font-medium">Total Cash Required</p>
                     <p className="text-3xl font-heading font-bold mt-1">
-                      {result ? formatCurrency(result.totalCashRequired) : '—'}
+                      {result ? formatCurrency(result.totalCashRequired) : '-'}
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">

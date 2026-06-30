@@ -366,7 +366,7 @@ export default function BookConsultation() {
                     <AccordionItem value="item-3">
                       <AccordionTrigger className="text-left font-bold text-primary text-xs sm:text-sm uppercase tracking-wider py-3 lg:py-4">How do your fees work?</AccordionTrigger>
                       <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">
-                        Our fee structures vary depending on the service—ranging from fixed advisory fees to percentage-based buyer's agency or project management fees. JV models are typically based on profit-sharing.
+                        Our fee structures vary depending on the service, ranging from fixed advisory fees to percentage-based buyer's agency or project management fees. JV models are typically based on profit-sharing.
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-4">

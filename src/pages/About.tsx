@@ -95,7 +95,7 @@ export default function About() {
             {[
               {
                 title: 'Leading Legal Counsel',
-                desc: 'Working with top-tier lawyers such as Tom Cantwell from Mills Oakley and David Grant from Colin Biggers & Paisley (recognised in The Best Lawyers in Australia 2023–2026), ensures your projects are legally sound and protected.',
+                desc: 'Working with top-tier lawyers such as Tom Cantwell from Mills Oakley and David Grant from Colin Biggers & Paisley (recognised in The Best Lawyers in Australia 2023-2026), ensures your projects are legally sound and protected.',
                 icon: <Scale size={32} />,
               },
               {
