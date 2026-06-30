@@ -289,9 +289,9 @@ export default function ContactCard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-8 sm:space-y-10"
+              className="space-y-6 sm:space-y-10"
             >
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-1 bg-accent" />
                   <img src={LOGO_URL} alt="PDCON" className="h-10 w-auto object-contain" />
@@ -329,21 +329,21 @@ export default function ContactCard() {
                 <p className="mt-4 text-sm text-muted-foreground italic px-2">{t.idiomSub}</p>
               </div>
 
-              <ul className="space-y-5">
+              <ul className="space-y-3 sm:space-y-5">
                 {t.highlights.map(({ icon: Icon, title, text }) => (
-                  <li key={title} className="flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-primary shrink-0">
-                      <Icon size={20} />
+                  <li key={title} className="flex items-center sm:items-start gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-secondary flex items-center justify-center text-primary shrink-0">
+                      <Icon size={18} className="sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <span className="block font-heading font-bold text-primary">{title}</span>
-                      <span className="block text-sm text-muted-foreground leading-relaxed">{text}</span>
+                      <span className="block font-heading font-bold text-primary text-sm sm:text-base">{title}</span>
+                      <span className="hidden sm:block text-sm text-muted-foreground leading-relaxed">{text}</span>
                     </div>
                   </li>
                 ))}
               </ul>
 
-              <div className="flex flex-col gap-4 pt-2 border-t border-primary/10">
+              <div className="flex flex-col gap-3 sm:gap-4 pt-4 sm:pt-2 border-t border-primary/10">
                 <a href="tel:+61408255259" className="flex items-center gap-3 group">
                   <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary group-hover:bg-accent group-hover:text-white transition-colors">
                     <Phone size={16} />
@@ -376,7 +376,7 @@ export default function ContactCard() {
                   <button
                     type="button"
                     onClick={copyWechat}
-                    className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 w-full text-[11px] text-muted-foreground hover:text-primary transition-colors group"
+                    className="hidden sm:flex flex-wrap items-center justify-center gap-x-2 gap-y-1 w-full text-[11px] text-muted-foreground hover:text-primary transition-colors group"
                   >
                     <span className="uppercase tracking-widest font-bold">{t.wechatIdLabel}:</span>
                     <span className="font-mono text-primary break-all">{WECHAT_ID}</span>
