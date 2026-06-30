@@ -54,7 +54,9 @@ const T = {
     successMsg: '我们已收到您的信息，PDCON 专员将尽快与您联系。',
     toastOk: '提交成功，我们会尽快与您联系。',
     toastFail: '提交失败，请重试。',
+    validationName: '请填写您的姓名。',
     validation: '请至少填写电话或电子邮箱其中一项。',
+    phonePlaceholder: '+86 138 0000 0000',
   },
   'zh-TW': {
     seoTitle: 'PDCON — 墨爾本房地產開發顧問',
@@ -83,7 +85,9 @@ const T = {
     successMsg: '我們已收到您的資訊，PDCON 專員將盡快與您聯繫。',
     toastOk: '提交成功，我們會盡快與您聯繫。',
     toastFail: '提交失敗，請重試。',
+    validationName: '請填寫您的姓名。',
     validation: '請至少填寫電話或電子郵箱其中一項。',
+    phonePlaceholder: '+852 6000 0000',
   },
   en: {
     seoTitle: 'Connect with PDCON — Property Development Consultants Melbourne',
@@ -113,7 +117,9 @@ const T = {
     successMsg: 'Your details are with us. A PDCON specialist will reach out shortly.',
     toastOk: 'Thanks — we will be in touch shortly.',
     toastFail: 'Failed to send. Please try again.',
+    validationName: 'Please enter your name.',
     validation: 'Please provide either an email address or phone number.',
+    phonePlaceholder: '+86 138 0000 0000',
   },
 } as const;
 
@@ -127,8 +133,14 @@ export default function ContactCard() {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
+    const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
+
+    if (!name?.trim()) {
+      toast.error(t.validationName);
+      return;
+    }
 
     if (!email?.trim() && !phone?.trim()) {
       toast.error(t.validation);
@@ -275,12 +287,11 @@ export default function ContactCard() {
                     <h2 className="text-2xl font-heading font-bold text-primary">{t.formTitle}</h2>
                     <p className="text-sm text-muted-foreground">{t.formSubtitle}</p>
                   </div>
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-[10px] uppercase tracking-widest font-bold text-primary">{t.nameLabel}</label>
                       <input
                         name="name"
-                        required
                         placeholder={t.namePlaceholder}
                         className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm font-medium"
                       />
@@ -290,7 +301,7 @@ export default function ContactCard() {
                       <input
                         name="phone"
                         type="tel"
-                        placeholder="+61 400 000 000"
+                        placeholder={t.phonePlaceholder}
                         className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm font-medium"
                       />
                     </div>
