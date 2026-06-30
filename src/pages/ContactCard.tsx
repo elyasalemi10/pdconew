@@ -11,7 +11,6 @@ import {
   Handshake,
   TrendingUp,
   Languages,
-  MessageCircle,
   Copy,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -143,7 +142,7 @@ export default function ContactCard() {
   const [submitted, setSubmitted] = useState(false);
   const t = T[lang];
 
-  const copyWechat = async () => {
+  const copyIdToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(WECHAT_ID);
     } catch {
@@ -157,12 +156,16 @@ export default function ContactCard() {
       try { document.execCommand('copy'); } catch { /* no-op */ }
       document.body.removeChild(ta);
     }
+  };
+
+  const copyWechat = async () => {
+    await copyIdToClipboard();
     toast.success(t.wechatCopied);
   };
 
   const openWechat = () => {
-    // Always copy the ID first — this is the reliable path that works everywhere.
-    void copyWechat();
+    // Copy the ID silently (no toast) as the reliable fallback.
+    void copyIdToClipboard();
     // Best-effort: try to open the WeChat app to a chat. Only does anything on a
     // device with WeChat installed (and an existing contact); a harmless no-op
     // on desktop and where the scheme isn't handled.
@@ -308,7 +311,7 @@ export default function ContactCard() {
                     onClick={openWechat}
                     className="flex items-center justify-center gap-3 w-full bg-[#07C160] hover:bg-[#06AD56] text-white font-heading font-bold uppercase tracking-wider text-xs sm:text-sm py-4 transition-colors"
                   >
-                    <MessageCircle size={18} />
+                    <img src="/wechat-icon.png" alt="" className="w-5 h-5 object-contain" />
                     {t.wechat}
                   </button>
                   <button
