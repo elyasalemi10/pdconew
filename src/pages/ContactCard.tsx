@@ -261,8 +261,8 @@ export default function ContactCard() {
       <section className="px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-20">
         <div className="max-w-5xl mx-auto">
           {/* Language switcher */}
-          <div className="flex items-center justify-end gap-2 mb-8">
-            <Languages size={16} className="text-muted-foreground" />
+          <div className="flex flex-wrap items-center justify-end gap-2 mb-8">
+            <Languages size={16} className="text-muted-foreground shrink-0" />
             <div className="inline-flex rounded-sm border border-border overflow-hidden">
               {LANGS.map(({ code, label }) => (
                 <button
@@ -270,7 +270,7 @@ export default function ContactCard() {
                   type="button"
                   onClick={() => setLang(code)}
                   aria-pressed={lang === code}
-                  className={`px-3 py-1.5 text-xs font-bold tracking-wide transition-colors ${
+                  className={`px-3.5 py-2.5 text-xs font-bold tracking-wide transition-colors ${
                     lang === code
                       ? 'bg-primary text-white'
                       : 'bg-white text-primary hover:bg-secondary'
@@ -289,44 +289,44 @@ export default function ContactCard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-10"
+              className="space-y-8 sm:space-y-10"
             >
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-1 bg-accent" />
                   <img src={LOGO_URL} alt="PDCON" className="h-10 w-auto object-contain" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-primary leading-tight">
                   {t.heroLead} <span className="text-accent">{t.heroAccent}</span>
                 </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed">{t.intro}</p>
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">{t.intro}</p>
               </div>
 
               {/* Cultural idiom band with lanterns */}
               <div className="relative flex flex-col items-center text-center py-2">
-                <div className="flex items-end justify-center gap-5 sm:gap-8">
+                <div className="flex items-end justify-center gap-3 sm:gap-8">
                   <motion.div
-                    className="origin-top"
+                    className="origin-top shrink-0"
                     animate={{ rotate: [-4, 4, -4] }}
                     transition={{ repeat: Infinity, duration: 4.5, ease: 'easeInOut' }}
                   >
-                    <Lantern className="h-16 sm:h-20 w-auto" />
+                    <Lantern className="h-14 sm:h-20 w-auto" />
                   </motion.div>
                   <div className="pb-3">
-                    <div className="text-3xl sm:text-4xl font-heading font-bold text-primary tracking-[0.25em] indent-[0.25em]">
+                    <div className="text-2xl sm:text-4xl font-heading font-bold text-primary tracking-[0.2em] sm:tracking-[0.25em] indent-[0.2em] sm:indent-[0.25em] whitespace-nowrap">
                       {t.idiom}
                     </div>
                     <div className="mx-auto mt-3 w-16 h-px bg-accent" />
                   </div>
                   <motion.div
-                    className="origin-top"
+                    className="origin-top shrink-0"
                     animate={{ rotate: [4, -4, 4] }}
                     transition={{ repeat: Infinity, duration: 5.2, ease: 'easeInOut' }}
                   >
-                    <Lantern className="h-16 sm:h-20 w-auto" />
+                    <Lantern className="h-14 sm:h-20 w-auto" />
                   </motion.div>
                 </div>
-                <p className="mt-4 text-sm text-muted-foreground italic">{t.idiomSub}</p>
+                <p className="mt-4 text-sm text-muted-foreground italic px-2">{t.idiomSub}</p>
               </div>
 
               <ul className="space-y-5">
@@ -376,11 +376,11 @@ export default function ContactCard() {
                   <button
                     type="button"
                     onClick={copyWechat}
-                    className="flex items-center justify-center gap-2 w-full text-[11px] text-muted-foreground hover:text-primary transition-colors group"
+                    className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 w-full text-[11px] text-muted-foreground hover:text-primary transition-colors group"
                   >
                     <span className="uppercase tracking-widest font-bold">{t.wechatIdLabel}:</span>
-                    <span className="font-mono text-primary">{WECHAT_ID}</span>
-                    <Copy size={12} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <span className="font-mono text-primary break-all">{WECHAT_ID}</span>
+                    <Copy size={12} className="opacity-50 group-hover:opacity-100 transition-opacity shrink-0" />
                   </button>
                 </div>
               </div>
@@ -416,7 +416,7 @@ export default function ContactCard() {
                       <input
                         name="name"
                         placeholder={t.namePlaceholder}
-                        className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm font-medium"
+                        className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-base sm:text-sm font-medium"
                       />
                     </div>
                     <div className="space-y-2">
@@ -425,7 +425,7 @@ export default function ContactCard() {
                         name="phone"
                         type="tel"
                         placeholder={t.phonePlaceholder}
-                        className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm font-medium"
+                        className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-base sm:text-sm font-medium"
                       />
                     </div>
                     <div className="relative flex items-center gap-3">
@@ -439,7 +439,7 @@ export default function ContactCard() {
                         name="email"
                         type="email"
                         placeholder="jane@example.com"
-                        className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm font-medium"
+                        className="w-full bg-white border border-border p-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-base sm:text-sm font-medium"
                       />
                     </div>
                     <Button
