@@ -160,6 +160,15 @@ export default function ContactCard() {
     toast.success(t.wechatCopied);
   };
 
+  const openWechat = () => {
+    // Always copy the ID first — this is the reliable path that works everywhere.
+    void copyWechat();
+    // Best-effort: try to open the WeChat app to a chat. Only does anything on a
+    // device with WeChat installed (and an existing contact); a harmless no-op
+    // on desktop and where the scheme isn't handled.
+    window.location.href = `weixin://dl/chat?${WECHAT_ID}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -296,7 +305,7 @@ export default function ContactCard() {
                 <div className="pt-2 space-y-2">
                   <button
                     type="button"
-                    onClick={copyWechat}
+                    onClick={openWechat}
                     className="flex items-center justify-center gap-3 w-full bg-[#07C160] hover:bg-[#06AD56] text-white font-heading font-bold uppercase tracking-wider text-xs sm:text-sm py-4 transition-colors"
                   >
                     <MessageCircle size={18} />
