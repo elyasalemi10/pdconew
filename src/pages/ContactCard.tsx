@@ -11,12 +11,17 @@ import {
   Handshake,
   TrendingUp,
   Languages,
+  MessageCircle,
+  Copy,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEO } from '@/components/shared/SEO';
 
 const LOGO_URL = "/images/pdcon-logo.webp";
 const API_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
+// The WeChat ID people search for to add PDCON.
+// NOTE: this should be your custom 微信号, not the internal wxid_ system ID.
+const WECHAT_ID = 'wxid_fnnejlj2t74u12';
 
 type Lang = 'zh-CN' | 'zh-TW' | 'en';
 
@@ -57,6 +62,9 @@ const T = {
     validationName: '请填写您的姓名。',
     validation: '请至少填写电话或电子邮箱其中一项。',
     phonePlaceholder: '+86 138 0000 0000',
+    wechat: '添加微信',
+    wechatIdLabel: '微信号',
+    wechatCopied: '微信号已复制，请在微信中粘贴搜索并添加。',
   },
   'zh-TW': {
     seoTitle: 'PDCON — 墨爾本房地產開發顧問',
@@ -88,6 +96,9 @@ const T = {
     validationName: '請填寫您的姓名。',
     validation: '請至少填寫電話或電子郵箱其中一項。',
     phonePlaceholder: '+852 6000 0000',
+    wechat: '加入微信',
+    wechatIdLabel: '微信號',
+    wechatCopied: '微信號已複製，請在微信中貼上搜尋並加入。',
   },
   en: {
     seoTitle: 'Connect with PDCON — Property Development Consultants Melbourne',
@@ -120,6 +131,9 @@ const T = {
     validationName: 'Please enter your name.',
     validation: 'Please provide either an email address or phone number.',
     phonePlaceholder: '+86 138 0000 0000',
+    wechat: 'Add us on WeChat',
+    wechatIdLabel: 'WeChat ID',
+    wechatCopied: 'WeChat ID copied — paste it into WeChat search to add us.',
   },
 } as const;
 
@@ -128,6 +142,23 @@ export default function ContactCard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const t = T[lang];
+
+  const copyWechat = async () => {
+    try {
+      await navigator.clipboard.writeText(WECHAT_ID);
+    } catch {
+      // Clipboard API unavailable (older mobile browsers) — fall back to selection copy.
+      const ta = document.createElement('textarea');
+      ta.value = WECHAT_ID;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch { /* no-op */ }
+      document.body.removeChild(ta);
+    }
+    toast.success(t.wechatCopied);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -259,6 +290,27 @@ export default function ContactCard() {
                     <MapPin size={16} />
                   </div>
                   <span className="text-primary font-bold">{t.addr}</span>
+                </div>
+
+                {/* WeChat */}
+                <div className="pt-2 space-y-2">
+                  <button
+                    type="button"
+                    onClick={copyWechat}
+                    className="flex items-center justify-center gap-3 w-full bg-[#07C160] hover:bg-[#06AD56] text-white font-heading font-bold uppercase tracking-wider text-xs sm:text-sm py-4 transition-colors"
+                  >
+                    <MessageCircle size={18} />
+                    {t.wechat}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={copyWechat}
+                    className="flex items-center justify-center gap-2 w-full text-[11px] text-muted-foreground hover:text-primary transition-colors group"
+                  >
+                    <span className="uppercase tracking-widest font-bold">{t.wechatIdLabel}:</span>
+                    <span className="font-mono text-primary">{WECHAT_ID}</span>
+                    <Copy size={12} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+                  </button>
                 </div>
               </div>
             </motion.div>
