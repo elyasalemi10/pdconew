@@ -89,9 +89,9 @@ const T = {
     validationName: '请填写您的姓名。',
     validation: '请至少填写电话或电子邮箱其中一项。',
     phonePlaceholder: '+86 138 0000 0000',
-    wechat: '添加微信',
+    wechat: '点击复制微信号',
     wechatIdLabel: '微信号',
-    wechatCopied: '微信号已复制，请在微信中粘贴搜索并添加。',
+    wechatCopied: '微信号已复制，请打开微信粘贴添加。',
   },
   'zh-TW': {
     seoTitle: 'PDCON | 墨爾本房地產開發顧問',
@@ -125,9 +125,9 @@ const T = {
     validationName: '請填寫您的姓名。',
     validation: '請至少填寫電話或電子郵箱其中一項。',
     phonePlaceholder: '+852 6000 0000',
-    wechat: '加入微信',
+    wechat: '點擊複製微信號',
     wechatIdLabel: '微信號',
-    wechatCopied: '微信號已複製，請在微信中貼上搜尋並加入。',
+    wechatCopied: '微信號已複製，請打開微信貼上加入。',
   },
   en: {
     seoTitle: 'Connect with PDCON | Property Development Consultants Melbourne',
@@ -162,9 +162,9 @@ const T = {
     validationName: 'Please enter your name.',
     validation: 'Please provide either an email address or phone number.',
     phonePlaceholder: '+86 138 0000 0000',
-    wechat: 'Add us on WeChat',
+    wechat: 'Click to copy WeChat ID',
     wechatIdLabel: 'WeChat ID',
-    wechatCopied: 'WeChat ID copied. Paste it into WeChat search to add us.',
+    wechatCopied: 'WeChat ID copied. Open WeChat and paste to add us.',
   },
 } as const;
 
@@ -193,15 +193,6 @@ export default function ContactCard() {
   const copyWechat = async () => {
     await copyIdToClipboard();
     toast.success(t.wechatCopied);
-  };
-
-  const openWechat = () => {
-    // Copy the ID silently (no toast) as the reliable fallback.
-    void copyIdToClipboard();
-    // Best-effort: try to open the WeChat app to a chat. Only does anything on a
-    // device with WeChat installed (and an existing contact); a harmless no-op
-    // on desktop and where the scheme isn't handled.
-    window.location.href = `weixin://dl/chat?${WECHAT_ID}`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -282,14 +273,14 @@ export default function ContactCard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            {/* Left: About PDCON */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-x-16 items-start">
+            {/* Brand + idiom + services + WeChat copy button */}
             <motion.div
               key={`info-${lang}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6 sm:space-y-10"
+              className="space-y-6 sm:space-y-10 lg:col-start-1 lg:row-start-1"
             >
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-4">
@@ -299,7 +290,7 @@ export default function ContactCard() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-primary leading-tight">
                   {t.heroLead} <span className="text-accent">{t.heroAccent}</span>
                 </h1>
-                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">{t.intro}</p>
+                <p className="text-sm sm:text-lg text-muted-foreground leading-relaxed">{t.intro}</p>
               </div>
 
               {/* Cultural idiom band with lanterns */}
@@ -329,7 +320,7 @@ export default function ContactCard() {
                 <p className="mt-4 text-sm text-muted-foreground italic px-2">{t.idiomSub}</p>
               </div>
 
-              <ul className="space-y-3 sm:space-y-5">
+              <ul className="hidden sm:block space-y-3 sm:space-y-5">
                 {t.highlights.map(({ icon: Icon, title, text }) => (
                   <li key={title} className="flex items-center sm:items-start gap-3 sm:gap-4">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-secondary flex items-center justify-center text-primary shrink-0">
@@ -343,47 +334,14 @@ export default function ContactCard() {
                 ))}
               </ul>
 
-              <div className="flex flex-col gap-3 sm:gap-4 pt-4 sm:pt-2 border-t border-primary/10">
-                <a href="tel:+61408255259" className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary group-hover:bg-accent group-hover:text-white transition-colors">
-                    <Phone size={16} />
-                  </div>
-                  <span className="text-primary font-bold group-hover:text-accent transition-colors">0408 255 259</span>
-                </a>
-                <a href="mailto:info@pdcon.com.au" className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary group-hover:bg-accent group-hover:text-white transition-colors">
-                    <Mail size={16} />
-                  </div>
-                  <span className="text-primary font-bold group-hover:text-accent transition-colors">info@pdcon.com.au</span>
-                </a>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
-                    <MapPin size={16} />
-                  </div>
-                  <span className="text-primary font-bold">{t.addr}</span>
-                </div>
-
-                {/* WeChat */}
-                <div className="pt-2 space-y-2">
-                  <button
-                    type="button"
-                    onClick={openWechat}
-                    aria-label={t.wechat}
-                    className="flex items-center justify-center w-full bg-[#07C160] hover:bg-[#06AD56] py-4 transition-colors"
-                  >
-                    <img src="/wechat-icon.png" alt={t.wechat} className="h-7 w-auto object-contain" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={copyWechat}
-                    className="hidden sm:flex flex-wrap items-center justify-center gap-x-2 gap-y-1 w-full text-[11px] text-muted-foreground hover:text-primary transition-colors group"
-                  >
-                    <span className="uppercase tracking-widest font-bold">{t.wechatIdLabel}:</span>
-                    <span className="font-mono text-primary break-all">{WECHAT_ID}</span>
-                    <Copy size={12} className="opacity-50 group-hover:opacity-100 transition-opacity shrink-0" />
-                  </button>
-                </div>
-              </div>
+              {/* WeChat: copy ID button */}
+              <button
+                type="button"
+                onClick={copyWechat}
+                className="flex items-center justify-center gap-2 w-full bg-[#07C160] hover:bg-[#06AD56] text-white py-4 font-heading font-bold uppercase tracking-wider text-xs sm:text-sm transition-colors"
+              >
+                <Copy size={16} /> {t.wechat}
+              </button>
             </motion.div>
 
             {/* Right: Form */}
@@ -392,7 +350,7 @@ export default function ContactCard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-secondary/30 p-6 sm:p-10 border border-secondary shadow-2xl relative lg:sticky lg:top-28"
+              className="bg-secondary/30 p-6 sm:p-10 border border-secondary shadow-2xl relative lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-28"
             >
               <div className="absolute top-0 right-0 w-28 h-28 bg-accent/5 -z-10 rounded-bl-full" />
 
@@ -457,6 +415,34 @@ export default function ContactCard() {
                   </form>
                 </>
               )}
+            </motion.div>
+
+            {/* Contact info */}
+            <motion.div
+              key={`contact-${lang}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="flex flex-col gap-3 sm:gap-4 pt-4 border-t border-primary/10 lg:col-start-1 lg:row-start-2"
+            >
+              <a href="tel:+61408255259" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary group-hover:bg-accent group-hover:text-white transition-colors">
+                  <Phone size={16} />
+                </div>
+                <span className="text-primary font-bold group-hover:text-accent transition-colors">0408 255 259</span>
+              </a>
+              <a href="mailto:info@pdcon.com.au" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary group-hover:bg-accent group-hover:text-white transition-colors">
+                  <Mail size={16} />
+                </div>
+                <span className="text-primary font-bold group-hover:text-accent transition-colors">info@pdcon.com.au</span>
+              </a>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
+                  <MapPin size={16} />
+                </div>
+                <span className="text-primary font-bold">{t.addr}</span>
+              </div>
             </motion.div>
           </div>
         </div>
