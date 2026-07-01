@@ -280,7 +280,7 @@ export default function ContactCard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6 sm:space-y-10 lg:col-start-1 lg:row-start-1"
+              className="flex flex-col gap-6 sm:gap-10 lg:col-start-1 lg:row-start-1"
             >
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-4">
@@ -338,7 +338,7 @@ export default function ContactCard() {
               <button
                 type="button"
                 onClick={copyWechat}
-                className="flex items-center justify-center gap-2 w-full bg-[#07C160] hover:bg-[#06AD56] text-white py-4 font-heading font-bold uppercase tracking-wider text-xs sm:text-sm transition-colors"
+                className="order-first lg:order-none flex items-center justify-center gap-2 w-full bg-[#07C160] hover:bg-[#06AD56] text-white py-4 font-heading font-bold uppercase tracking-wider text-xs sm:text-sm transition-colors"
               >
                 <Copy size={16} /> {t.wechat}
               </button>
