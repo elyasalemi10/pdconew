@@ -10,6 +10,7 @@
     "build": "vite build",
     "build:seo": "vite build && node scripts/prerender.js",
     "prerender": "node scripts/prerender.js",
+    "onepager": "node scripts/make-onepager.js",
     "preview": "vite preview",
     "lint:css": "stylelint \"src/**/*.css\" --fix --quiet",
     "lint:js": "eslint . --ext ts,tsx --report-unused-disable-directives",
