@@ -1,9 +1,10 @@
-// Generates a self-contained A4 one-pager PDF with PDCON's contact info
-// (no form) for sending to clients in China when the site is unreachable.
-// Run: node scripts/make-onepager.js
+// Generates self-contained A4 one-pager PDFs (Simplified, Traditional, English)
+// with PDCON's contact info (no form) to send clients when the site is
+// unreachable. Saves to ~/Downloads.  Run: node scripts/make-onepager.js
 import { readFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { homedir } from 'os';
 import puppeteer from 'puppeteer';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -26,6 +27,7 @@ const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 // Fetch a Noto Sans SC subset containing only `chars` (headless Chromium has no CJK
 // system font; a full CJK font would be multi-MB, so we subset to what's used).
 async function fetchNotoSubset(chars) {
+  if (!chars) return '';
   const url =
     'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap&text=' +
     encodeURIComponent(chars);
@@ -69,48 +71,105 @@ const icons = {
   globe: icon('<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
 };
 
-const highlights = [
-  { t: '房地产开发', s: 'Property Development', d: '为墨尔本各类住宅及开发用地提供全程项目管理。' },
-  { t: '投资咨询', s: 'Investment Advisory', d: '提供战略性收购与可行性分析建议，助您实现回报最大化。' },
-  { t: '合资合作', s: 'Joint Ventures', d: '整合资金、土地与专业经验的合作机会。' },
-];
-const contacts = [
-  { i: icons.phone, l: '电话 Phone', v: '0408 255 259' },
-  { i: icons.mail, l: '电子邮箱 Email', v: 'info@pdcon.com.au' },
-  { i: icons.chat, l: '微信 WeChat', v: 'wxid_fnnejlj2t74u12' },
-  { i: icons.pin, l: '地址 Address', v: '7 Hammel Court, Hallam 3803, 维多利亚州 VIC' },
-  { i: icons.globe, l: '网站 Website', v: 'pdcon.com.au' },
+const LANGS = [
+  {
+    file: 'PDCON Introduction Simplified Chinese',
+    htmlLang: 'zh-CN',
+    heroLead: '让我们携手',
+    heroAccent: '共创未来',
+    intro: [
+      'PDCON 是一家位于墨尔本的房地产开发顾问公司。我们与投资者和业主携手合作，在开发、咨询及合资项目中释放资产价值，从可行性研究到项目竣工，全程为您提供专业指导。',
+      'PDCON is a Melbourne-based property development consultancy, partnering with investors and landowners across development, advisory, and joint venture projects.',
+    ],
+    idiom: '安居乐业',
+    idiomSub: '愿您在墨尔本安居乐业，家业兴旺。 &nbsp;·&nbsp; Ān jū lè yè: a place to settle, a life to enjoy.',
+    highlights: [
+      { t: '房地产开发', s: 'Property Development', d: '为墨尔本各类住宅及开发用地提供全程项目管理。' },
+      { t: '投资咨询', s: 'Investment Advisory', d: '提供战略性收购与可行性分析建议，助您实现回报最大化。' },
+      { t: '合资合作', s: 'Joint Ventures', d: '整合资金、土地与专业经验的合作机会。' },
+    ],
+    section: '联系我们',
+    labels: { phone: '电话', email: '电子邮箱', wechat: '微信', address: '地址', website: '网站' },
+    addr: '7 Hammel Court, Hallam 3803, 维多利亚州 VIC',
+  },
+  {
+    file: 'PDCON Introduction Traditional Chinese',
+    htmlLang: 'zh-Hant',
+    heroLead: '讓我們攜手',
+    heroAccent: '共創未來',
+    intro: [
+      'PDCON 是一家位於墨爾本的房地產開發顧問公司。我們與投資者及業主攜手合作，在開發、諮詢及合資項目中釋放資產價值，從可行性研究到項目竣工，全程為您提供專業指導。',
+      'PDCON is a Melbourne-based property development consultancy, partnering with investors and landowners across development, advisory, and joint venture projects.',
+    ],
+    idiom: '安居樂業',
+    idiomSub: '願您在墨爾本安居樂業，家業興旺。 &nbsp;·&nbsp; Ān jū lè yè: a place to settle, a life to enjoy.',
+    highlights: [
+      { t: '房地產開發', s: 'Property Development', d: '為墨爾本各類住宅及開發用地提供全程項目管理。' },
+      { t: '投資諮詢', s: 'Investment Advisory', d: '提供策略性收購與可行性分析建議，助您實現回報最大化。' },
+      { t: '合資合作', s: 'Joint Ventures', d: '整合資金、土地與專業經驗的合作機會。' },
+    ],
+    section: '聯繫我們',
+    labels: { phone: '電話', email: '電子郵箱', wechat: '微信', address: '地址', website: '網站' },
+    addr: '7 Hammel Court, Hallam 3803, 維多利亞州 VIC',
+  },
+  {
+    file: 'PDCON Introduction English',
+    htmlLang: 'en',
+    heroLead: "Let's Build ",
+    heroAccent: 'Together',
+    intro: [
+      'PDCON is a Melbourne-based property development consultancy. We partner with investors and landowners to unlock value across development, advisory, and joint venture projects, guiding every step from feasibility to completion.',
+    ],
+    idiom: '安居乐业',
+    idiomSub: 'Ān jū lè yè &nbsp;·&nbsp; a place to settle, a life to enjoy.',
+    highlights: [
+      { t: 'Property Development', s: '', d: 'End-to-end project management for residential and development sites across Melbourne.' },
+      { t: 'Investment Advisory', s: '', d: 'Strategic acquisition and feasibility guidance to maximise your returns.' },
+      { t: 'Joint Ventures', s: '', d: 'Partnership opportunities that align capital, land, and expertise.' },
+    ],
+    section: 'Get in touch',
+    labels: { phone: 'Phone', email: 'Email', wechat: 'WeChat', address: 'Address', website: 'Website' },
+    addr: '7 Hammel Court, Hallam VIC 3803, Australia',
+  },
 ];
 
-const body = `<body>
+function buildBody(L) {
+  const contacts = [
+    { i: icons.phone, l: L.labels.phone, v: '0408 255 259' },
+    { i: icons.mail, l: L.labels.email, v: 'info@pdcon.com.au' },
+    { i: icons.chat, l: L.labels.wechat, v: 'wxid_fnnejlj2t74u12' },
+    { i: icons.pin, l: L.labels.address, v: L.addr },
+    { i: icons.globe, l: L.labels.website, v: 'pdcon.com.au' },
+  ];
+  return `<body>
   <div class="top">
     <div class="bar"></div>
     <img class="logo" src="data:image/webp;base64,${logo}" alt="PDCON"/>
   </div>
 
-  <h1 class="cjk-h">让我们携手<span class="accent">共创未来</span></h1>
-  <p class="intro">PDCON 是一家位于墨尔本的房地产开发顾问公司。我们与投资者和业主携手合作，在开发、咨询及合资项目中释放资产价值，从可行性研究到项目竣工，全程为您提供专业指导。<br/>PDCON is a Melbourne-based property development consultancy, partnering with investors and landowners across development, advisory, and joint venture projects.</p>
+  <h1 class="cjk-h">${L.heroLead}<span class="accent">${L.heroAccent}</span></h1>
+  <p class="intro">${L.intro.join('<br/>')}</p>
 
   <div class="idiom">
     ${lantern}
-    <div class="word"><div class="chars cjk-h">安居乐业</div><div class="rule"></div></div>
+    <div class="word"><div class="chars cjk-h">${L.idiom}</div><div class="rule"></div></div>
     ${lantern}
   </div>
-  <div class="idiom-sub">愿您在墨尔本安居乐业，家业兴旺。 &nbsp;·&nbsp; Ān jū lè yè: a place to settle, a life to enjoy.</div>
+  <div class="idiom-sub">${L.idiomSub}</div>
 
   <div class="hls">
-    ${highlights
+    ${L.highlights
       .map(
         (h, n) => `<div class="hl">
       <div class="num cjk-h">0${n + 1}</div>
-      <div><div class="title cjk-h">${h.t}<span>${h.s}</span></div><div class="desc">${h.d}</div></div>
+      <div><div class="title cjk-h">${h.t}${h.s ? `<span>${h.s}</span>` : ''}</div><div class="desc">${h.d}</div></div>
     </div>`
       )
       .join('')}
   </div>
 
   <div class="contact">
-    <h2 class="cjk-h">联系我们 &nbsp; Get in touch</h2>
+    <h2 class="cjk-h">${L.section}</h2>
     <div class="cgrid">
       ${contacts
         .map(
@@ -119,17 +178,14 @@ const body = `<body>
         )
         .join('')}
     </div>
-    <div style="text-align:center"><span class="confidential">100% 保密 · Confidential</span></div>
   </div>
 
   <div class="foot">Property Development Consultants · Melbourne, Australia</div>
 </body></html>`;
+}
 
-// Subset only the CJK ideographs + CJK/fullwidth punctuation actually used.
-const cjkChars = [...new Set(body.match(/[　-〿＀-￯一-鿿]/g) || [])].join('');
-const notoFaces = await fetchNotoSubset(cjkChars);
-
-const head = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+function buildHead(L, notoFaces) {
+  return `<!doctype html><html lang="${L.htmlLang}"><head><meta charset="utf-8">
 <style>
 @font-face{font-family:'Inter';font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,${interLatin}) format('woff2');}
 @font-face{font-family:'Space Grotesk';font-weight:300 700;font-display:swap;src:url(data:font/woff2;base64,${groteskLatin}) format('woff2');}
@@ -170,20 +226,25 @@ h1 .accent{color:var(--gold);}
 .crow .lbl{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;}
 .crow .val{font-size:14px;font-weight:700;}
 .foot{margin-top:18px;text-align:center;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);}
-.confidential{display:inline-flex;align-items:center;gap:7px;background:#f8f4ec;border:1px solid #eadfc6;color:${GOLD};
-  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:7px 12px;border-radius:2px;margin-top:14px;}
 </style></head>`;
+}
 
-const html = head + body;
-
-const outDir = join(root, 'public');
+const outDir = join(homedir(), 'Downloads');
 mkdirSync(outDir, { recursive: true });
-const out = join(outDir, 'PDCON-contact.pdf');
 
 const browser = await puppeteer.launch({ headless: 'new' });
-const page = await browser.newPage();
-await page.setContent(html, { waitUntil: 'networkidle0' });
-await page.evaluateHandle('document.fonts.ready');
-await page.pdf({ path: out, format: 'A4', printBackground: true, preferCSSPageSize: true });
+for (const L of LANGS) {
+  const body = buildBody(L);
+  const cjkChars = [...new Set(body.match(/[　-〿＀-￯一-鿿]/g) || [])].join('');
+  const notoFaces = await fetchNotoSubset(cjkChars);
+  const html = buildHead(L, notoFaces) + body;
+
+  const page = await browser.newPage();
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+  await page.evaluateHandle('document.fonts.ready');
+  const out = join(outDir, `${L.file}.pdf`);
+  await page.pdf({ path: out, format: 'A4', printBackground: true, preferCSSPageSize: true });
+  await page.close();
+  console.log('Wrote', out);
+}
 await browser.close();
-console.log('Wrote', out);
